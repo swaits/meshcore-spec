@@ -1,0 +1,97 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Raw Custom Payload - Basic",
+  "spec_ref": "spec/13-payload-raw-custom.md",
+  "protocol_version": 0,
+  "description": "Tests raw custom payload encoding. RAW_CUSTOM carries application-defined raw bytes.",
+  "vectors": [
+    {
+      "id": "raw-001",
+      "description": "Minimal raw custom payload (1 byte)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "42"
+        }
+      },
+      "binary": "3E 00 42",
+      "notes": "Header 0x3E = RAW_CUSTOM(15)+DIRECT(2). Single byte payload."
+    },
+    {
+      "id": "raw-002",
+      "description": "Raw custom with binary data",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 1,
+          "hashes": [
+            "AA"
+          ]
+        },
+        "payload": {
+          "data": "DEADBEEFCAFEBABE"
+        }
+      },
+      "binary": "3E 01 AA DEADBEEFCAFEBABE",
+      "notes": "Direct route with 1-hop path."
+    },
+    {
+      "id": "raw-003",
+      "description": "Raw custom with all-zero payload",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "0000000000000000"
+        }
+      },
+      "binary": "3E 00 0000000000000000"
+    },
+    {
+      "id": "raw-004",
+      "description": "Raw custom with all-FF payload",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FFFFFFFFFFFFFFFF"
+        }
+      },
+      "binary": "3E 00 FFFFFFFFFFFFFFFF"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Advertisement Payload - Basic Structure",
+  "spec_ref": "spec/05-payload-advert.md",
+  "protocol_version": 0,
+  "description": "Tests the basic structure of advertisement payloads: pub_key(32) + timestamp(4) + signature(64) + optional app_data. Uses synthetic signature bytes since signature verification requires real Ed25519 operations (see signature-verify.json for verifiable vectors).",
+  "vectors": [
+    {
+      "id": "adv-001",
+      "description": "Minimal advertisement: pub_key + timestamp + signature, no app_data",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "pub_key": "0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F20",
+          "timestamp": 1700000000,
+          "signature": "A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8B9BABBBCBDBEBFC0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDFE0"
+        }
+      },
+      "binary": "11 00 0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F20 00F15365 A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8B9BABBBCBDBEBFC0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDFE0",
+      "notes": "Header: 0x11 = ADVERT+FLOOD. Timestamp 1700000000 = 0x6553F100 LE = 00F15365. Payload: 32+4+64 = 100 bytes."
+    },
+    {
+      "id": "adv-002",
+      "description": "Advertisement with 1-byte app_data",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "pub_key": "0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F20",
+          "timestamp": 1700000000,
+          "signature": "A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8B9BABBBCBDBEBFC0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDFE0",
+          "app_data": {
+            "flags": 1
+          }
+        }
+      },
+      "binary": "11 00 0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F20 00F15365 A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8B9BABBBCBDBEBFC0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDFE0 01",
+      "notes": "flags=0x01: type=Chat(1), no optional fields. Payload: 101 bytes."
+    },
+    {
+      "id": "adv-003",
+      "description": "Advertisement with path (3 hops, direct routing)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 3,
+          "hashes": [
+            "AA",
+            "BB",
+            "CC"
+          ]
+        },
+        "payload": {
+          "pub_key": "0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F20",
+          "timestamp": 0,
+          "signature": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        }
+      },
+      "binary": "11 03 AABBCC 0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F20 00000000 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "notes": "Timestamp=0 and zero signature for structural testing."
+    }
+  ]
+}

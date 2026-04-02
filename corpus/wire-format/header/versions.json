@@ -1,0 +1,97 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Header - Protocol Versions",
+  "spec_ref": "spec/02-header.md",
+  "protocol_version": 0,
+  "description": "Tests encoding of all 4 protocol version values in header bits 6-7. Uses ACK (type=3) with FLOOD routing as a simple baseline.",
+  "vectors": [
+    {
+      "id": "ver-000",
+      "description": "Version 0 (V1, current) - bits 6-7 = 00",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 00 01000000",
+      "notes": "Header: (0<<6)|(3<<2)|1 = 0x0D. Version 0 = V1."
+    },
+    {
+      "id": "ver-001",
+      "description": "Version 1 (V2, reserved) - bits 6-7 = 01",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 1,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "4D 00 01000000",
+      "notes": "Header: (1<<6)|(3<<2)|1 = 0x4D. Version 1 = V2 (reserved)."
+    },
+    {
+      "id": "ver-002",
+      "description": "Version 2 (V3, reserved) - bits 6-7 = 10",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 2,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "8D 00 01000000",
+      "notes": "Header: (2<<6)|(3<<2)|1 = 0x8D. Version 2 = V3 (reserved)."
+    },
+    {
+      "id": "ver-003",
+      "description": "Version 3 (V4, reserved) - bits 6-7 = 11",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 3,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "CD 00 01000000",
+      "notes": "Header: (3<<6)|(3<<2)|1 = 0xCD. Version 3 = V4 (reserved)."
+    }
+  ]
+}

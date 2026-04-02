@@ -1,0 +1,76 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Encrypted Payload - Extra Edge Cases",
+  "spec_ref": "spec/06-payload-encrypted.md",
+  "protocol_version": 0,
+  "description": "Additional encrypted payload tests: non-FLOOD routes, hash_size>1 paths, 32-byte plaintext, and payload-level invalid cases.",
+  "vectors": [
+    {
+      "id": "enc-extra-001",
+      "description": "Encrypted TXT_MSG via DIRECT routing with 2-byte hash path",
+      "type": "encode_decode",
+      "structured": {
+        "header": { "version": 0, "payload_type": "txt_msg", "route_type": "direct" },
+        "path": { "hash_size": 2, "hash_count": 1, "hashes": ["AABB"] },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "EAB5",
+          "ciphertext": "D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "0A 41 AABB ABCD EAB5 D9FD218D50A4409143A7243D6D913502",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "plaintext": "48656C6C6F"
+      },
+      "notes": "Header 0x0A = TXT_MSG(2)+DIRECT(2). path_len=0x41 (hash_size=2, count=1). Tests encrypted payload with non-FLOOD routing and multi-byte hash."
+    },
+    {
+      "id": "enc-extra-002",
+      "description": "Encrypted TXT_MSG via TRANSPORT_FLOOD with transport codes",
+      "type": "encode_decode",
+      "structured": {
+        "header": { "version": 0, "payload_type": "txt_msg", "route_type": "transport_flood" },
+        "transport_codes": [1000, 0],
+        "path": { "hash_size": 1, "hash_count": 0, "hashes": [] },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "EAB5",
+          "ciphertext": "D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "08 E803 0000 00 ABCD EAB5 D9FD218D50A4409143A7243D6D913502",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "plaintext": "48656C6C6F"
+      },
+      "notes": "Header 0x08 = TXT_MSG(2)+TRANSPORT_FLOOD(0). Tests encrypted payload with transport codes."
+    },
+    {
+      "id": "enc-extra-003",
+      "description": "ACK payload too short (3 bytes instead of 4)",
+      "type": "invalid",
+      "binary": "0D 00 EFBEAD",
+      "expected_error": "incomplete_payload",
+      "notes": "ACK requires exactly 4 bytes. Only 3 provided."
+    },
+    {
+      "id": "enc-extra-004",
+      "description": "Payload exceeds MAX_PACKET_PAYLOAD (185 bytes)",
+      "type": "invalid",
+      "binary": "3D 00 000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F606162636465666768696A6B6C6D6E6F707172737475767778797A7B7C7D7E7F808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8",
+      "expected_error": "payload_too_large",
+      "notes": "Payload is 185 bytes (0x00..0xB8), exceeding MAX_PACKET_PAYLOAD of 184. readFrom MUST reject."
+    },
+    {
+      "id": "enc-extra-005",
+      "description": "Header 0xFF sentinel on wire (must reject)",
+      "type": "invalid",
+      "binary": "FF 00 DEADBEEF",
+      "expected_error": "sentinel_header",
+      "notes": "Header 0xFF is used internally as do-not-retransmit marker. MUST NOT appear on the wire."
+    }
+  ]
+}

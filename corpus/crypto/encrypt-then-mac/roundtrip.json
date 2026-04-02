@@ -1,0 +1,63 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Encrypt-then-MAC Roundtrip",
+  "spec_ref": "spec/14-crypto.md",
+  "protocol_version": 0,
+  "description": "Full encrypt-then-MAC pipeline test vectors. Each vector provides the shared secret, plaintext, and expected MAC+ciphertext output. Implementations should verify: (1) encrypt produces the ciphertext, (2) HMAC produces the MAC, (3) MACThenDecrypt recovers the plaintext.",
+  "vectors": [
+    {
+      "id": "etm-001",
+      "description": "Encrypt-then-MAC: 'Hello' with key 00..1F",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "EAB5 D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "3D 00 EAB5D9FD218D50A4409143A7243D6D913502",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "48656C6C6F"
+      },
+      "notes": "AES key = secret[0..15], HMAC key = secret[0..31]. Output = MAC(2) || Ciphertext(16) = 18 bytes."
+    },
+    {
+      "id": "etm-002",
+      "description": "Encrypt-then-MAC: 'Pipeline test!' with key 00..1F",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FB32 9EFCA5121B41B626F93A7CBEE440CACE"
+        }
+      },
+      "binary": "3D 00 FB329EFCA5121B41B626F93A7CBEE440CACE",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "506970656C696E65207465737421"
+      },
+      "notes": "Plaintext 'Pipeline test!' (14 bytes). Zero-padded to 16 bytes before AES encryption."
+    }
+  ]
+}

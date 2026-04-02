@@ -1,0 +1,33 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Framing - Empty Payload Rejection",
+  "spec_ref": "spec/01-wire-format.md",
+  "protocol_version": 0,
+  "description": "Verifies that packets with zero-length payload are rejected. The reference implementation (Packet::readFrom) checks 'if (i >= len) return false' after reading header+transport+path_len+path, requiring at least 1 byte of payload.",
+  "vectors": [
+    {
+      "id": "ep-001",
+      "description": "FLOOD packet with no payload bytes (just header + path_len)",
+      "type": "invalid",
+      "binary": "0D 00",
+      "expected_error": "empty_payload",
+      "notes": "2 bytes total: header 0x0D + path_len 0x00. No payload bytes remain. readFrom returns false because i(2) >= len(2)."
+    },
+    {
+      "id": "ep-002",
+      "description": "TRANSPORT_FLOOD with no payload (header + transport + path_len only)",
+      "type": "invalid",
+      "binary": "0C 0000 0000 00",
+      "expected_error": "empty_payload",
+      "notes": "6 bytes: header(1) + transport(4) + path_len(1). i=6, len=6, so i>=len = true."
+    },
+    {
+      "id": "ep-003",
+      "description": "FLOOD packet with path but no payload",
+      "type": "invalid",
+      "binary": "0D 02 AABB",
+      "expected_error": "empty_payload",
+      "notes": "4 bytes: header(1) + path_len(1) + path(2). i=4, len=4."
+    }
+  ]
+}

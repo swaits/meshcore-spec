@@ -1,0 +1,185 @@
+{
+  "$schema": "../schema/test-vector.schema.json",
+  "name": "KISS Protocol - SetHardware Extensions",
+  "spec_ref": "spec/19-kiss-protocol.md",
+  "protocol_version": 0,
+  "description": "Tests MeshCore-specific SetHardware (0x06) sub-commands and responses.",
+  "vectors": [
+    {
+      "id": "kiss-hw-001",
+      "description": "GetVersion request",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 06 11 C0"
+        }
+      },
+      "binary": "3D 00 C0 06 11 C0",
+      "notes": "SetHardware(06) + GetVersion(11)."
+    },
+    {
+      "id": "kiss-hw-002",
+      "description": "Version response: version=1, reserved=0",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 06 91 01 00 C0"
+        }
+      },
+      "binary": "3D 00 C0 06 91 01 00 C0",
+      "notes": "SetHardware(06) + Version response(91) + version=1 + reserved=0."
+    },
+    {
+      "id": "kiss-hw-003",
+      "description": "SetRadio: freq=869618000Hz, bw=62500Hz, sf=12, cr=5",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 06 09 D0C5D733 A4F40000 0C 05 C0"
+        }
+      },
+      "binary": "3D 00 C0 06 09 D0C5D733 A4F40000 0C 05 C0",
+      "notes": "SetRadio(09). freq=869618000=0x33D7C5D0 LE=D0C5D733. bw=62500=0x0000F4A4 LE=A4F40000. sf=12, cr=5."
+    },
+    {
+      "id": "kiss-hw-004",
+      "description": "Ping request and Pong response",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 06 17 C0"
+        }
+      },
+      "binary": "3D 00 C0 06 17 C0",
+      "notes": "SetHardware(06) + Ping(17)."
+    },
+    {
+      "id": "kiss-hw-005",
+      "description": "Error response: UnknownCmd (0x05)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 06 F1 05 C0"
+        }
+      },
+      "binary": "3D 00 C0 06 F1 05 C0",
+      "notes": "SetHardware(06) + Error(F1) + UnknownCmd(05)."
+    },
+    {
+      "id": "kiss-hw-006",
+      "description": "RxMeta unsolicited event: SNR=-2.5dB, RSSI=-100dBm",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 06 F9 F6 9C C0"
+        }
+      },
+      "binary": "3D 00 C0 06 F9 F6 9C C0",
+      "notes": "RxMeta(F9). SNR: -2.5dB × 4 = -10 = 0xF6 (signed byte). RSSI: -100dBm = 0x9C (signed byte)."
+    },
+    {
+      "id": "kiss-hw-007",
+      "description": "TxDone success",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 06 F8 01 C0"
+        }
+      },
+      "binary": "3D 00 C0 06 F8 01 C0",
+      "notes": "TxDone(F8) + success(01)."
+    },
+    {
+      "id": "kiss-hw-008",
+      "description": "Stats response: rx=100, tx=50, errors=2",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 06 92 64000000 32000000 02000000 C0"
+        }
+      },
+      "binary": "3D 00 C0 06 92 64000000 32000000 02000000 C0",
+      "notes": "Stats(92). rx=100=0x64 LE=64000000, tx=50=0x32 LE=32000000, errors=2 LE=02000000."
+    }
+  ]
+}

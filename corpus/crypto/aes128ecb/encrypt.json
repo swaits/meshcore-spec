@@ -1,0 +1,110 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "AES-128-ECB Encryption",
+  "spec_ref": "spec/14-crypto.md",
+  "protocol_version": 0,
+  "description": "Standalone AES-128-ECB encryption test vectors. Key is the first 16 bytes of the shared secret. These vectors test the raw encryption operation without MAC.",
+  "vectors": [
+    {
+      "id": "aes-001",
+      "description": "AES-128-ECB: key=00..0F, plaintext=all zeros",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C6A13B37878F5B826F4F8162A1C8D879"
+        }
+      },
+      "binary": "3D 00 C6A13B37878F5B826F4F8162A1C8D879",
+      "crypto_context": {
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "00000000000000000000000000000000"
+      },
+      "notes": "AES-128-ECB(key=00..0F, pt=00×16) = C6A13B37878F5B826F4F8162A1C8D879. Wrapped in RAW_CUSTOM for schema compliance."
+    },
+    {
+      "id": "aes-002",
+      "description": "AES-128-ECB: key=00..0F, plaintext=all FF",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "3C441F32CE07822364D7A2990E50BB13"
+        }
+      },
+      "binary": "3D 00 3C441F32CE07822364D7A2990E50BB13",
+      "crypto_context": {
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+      }
+    },
+    {
+      "id": "aes-003",
+      "description": "AES-128-ECB: key=00..0F, plaintext=00..0F (sequential)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "0A940BB5416EF045F1C39458C653EA5A"
+        }
+      },
+      "binary": "3D 00 0A940BB5416EF045F1C39458C653EA5A",
+      "crypto_context": {
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "000102030405060708090A0B0C0D0E0F"
+      }
+    },
+    {
+      "id": "aes-004",
+      "description": "AES-128-ECB: key=all FF, plaintext=all zeros",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "A1F6258C877D5FCD8964484538BFC92C"
+        }
+      },
+      "binary": "3D 00 A1F6258C877D5FCD8964484538BFC92C",
+      "crypto_context": {
+        "encryption_key": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+        "plaintext": "00000000000000000000000000000000"
+      }
+    }
+  ]
+}

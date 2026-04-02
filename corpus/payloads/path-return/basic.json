@@ -1,0 +1,122 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Path Return Payload - Basic",
+  "spec_ref": "spec/09-payload-path.md",
+  "protocol_version": 0,
+  "description": "Tests path return payload outer structure: dest_hash(1) + src_hash(1) + encrypt-then-MAC. The encrypted inner format contains path_len + path + extra_type + extra_data.",
+  "vectors": [
+    {
+      "id": "path-001",
+      "description": "Path return with encrypted inner data",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "path",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "EAB5",
+          "ciphertext": "D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "21 00 ABCD EAB5 D9FD218D50A4409143A7243D6D913502",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "plaintext": "48656C6C6F"
+      },
+      "notes": "Header 0x21 = PATH(8)+FLOOD(1). Same ciphertext as enc-001 since same key/plaintext. The decrypted inner format would be parsed as: path_len=0x48, hash_size=2, hash_count=8 etc. - this is a structural test only."
+    },
+    {
+      "id": "path-002",
+      "description": "Path return via DIRECT routing with 1-hop path",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "path",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 1,
+          "hashes": ["AB"]
+        },
+        "payload": {
+          "dest_hash": "CD",
+          "src_hash": "EF",
+          "cipher_mac": "EAB5",
+          "ciphertext": "D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "22 01 AB CDEF EAB5 D9FD218D50A4409143A7243D6D913502",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "plaintext": "48656C6C6F"
+      },
+      "notes": "Header 0x22 = PATH(8)+DIRECT(2). Direct-routed path return with 1 hop."
+    },
+    {
+      "id": "path-003",
+      "description": "Path return via TRANSPORT_FLOOD with transport codes",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "path",
+          "route_type": "transport_flood"
+        },
+        "transport_codes": [1, 2],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "EAB5",
+          "ciphertext": "D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "20 0100 0200 00 ABCD EAB5 D9FD218D50A4409143A7243D6D913502",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "plaintext": "48656C6C6F"
+      },
+      "notes": "Header 0x20 = PATH(8)+TRANSPORT_FLOOD(0). Transport codes [1, 2] as LE uint16."
+    },
+    {
+      "id": "path-004",
+      "description": "Path return with 2-block ciphertext (32 bytes plaintext)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "path",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "1234",
+          "ciphertext": "D9FD218D50A4409143A7243D6D913502D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "21 00 ABCD 1234 D9FD218D50A4409143A7243D6D913502D9FD218D50A4409143A7243D6D913502",
+      "notes": "Path return with 2 AES blocks of ciphertext (32 bytes). Tests multi-block encrypted path data."
+    }
+  ]
+}

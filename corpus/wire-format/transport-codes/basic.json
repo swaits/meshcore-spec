@@ -1,0 +1,183 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Transport Codes - Basic",
+  "spec_ref": "spec/01-wire-format.md",
+  "protocol_version": 0,
+  "description": "Tests transport code encoding with various values and route types that include/exclude transport codes.",
+  "vectors": [
+    {
+      "id": "tc-001",
+      "description": "Transport codes with TRANSPORT_FLOOD, both zero",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "transport_flood"
+        },
+        "transport_codes": [
+          0,
+          0
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0C 0000 0000 00 01000000",
+      "notes": "Both transport codes zero."
+    },
+    {
+      "id": "tc-002",
+      "description": "Transport codes with TRANSPORT_DIRECT, typical values",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "transport_direct"
+        },
+        "transport_codes": [
+          1000,
+          2000
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0F E803 D007 00 01000000",
+      "notes": "TC1: 1000=0x03E8 LE=E803. TC2: 2000=0x07D0 LE=D007."
+    },
+    {
+      "id": "tc-003",
+      "description": "Transport codes at maximum uint16 values",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "transport_flood"
+        },
+        "transport_codes": [
+          65535,
+          65535
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0C FFFF FFFF 00 01000000",
+      "notes": "Both transport codes at maximum: 0xFFFF."
+    },
+    {
+      "id": "tc-004",
+      "description": "Transport codes: code1=1, code2=0",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "transport_flood"
+        },
+        "transport_codes": [
+          1,
+          0
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0C 0100 0000 00 01000000",
+      "notes": "TC1=1 LE=0100, TC2=0."
+    },
+    {
+      "id": "tc-005",
+      "description": "Transport codes: code1=0x8000, code2=0x0001 (verify high bit handling)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "transport_direct"
+        },
+        "transport_codes": [
+          32768,
+          1
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0F 0080 0100 00 01000000",
+      "notes": "TC1: 0x8000 LE=0080. TC2: 1 LE=0100."
+    },
+    {
+      "id": "tc-006",
+      "description": "FLOOD route (no transport codes) - verify they are absent from wire",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 00 01000000",
+      "notes": "FLOOD route: no transport codes on wire. Total: 1 (header) + 1 (path_len) + 4 (ACK) = 6 bytes."
+    },
+    {
+      "id": "tc-007",
+      "description": "DIRECT route (no transport codes) - verify they are absent from wire",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0E 00 01000000",
+      "notes": "DIRECT route: no transport codes on wire."
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Control Payload - Basic",
+  "spec_ref": "spec/12-payload-control.md",
+  "protocol_version": 0,
+  "description": "Tests control payload encoding. Control packets carry raw bytes where the first byte's bit 7 indicates zero-hop-only restriction.",
+  "vectors": [
+    {
+      "id": "ctl-001",
+      "description": "Control packet with multi-hop allowed (bit 7 clear)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "control",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "01 AABBCCDD"
+        }
+      },
+      "binary": "2D 00 01 AABBCCDD",
+      "notes": "control_byte=0x01: bit 7 clear, multi-hop allowed."
+    },
+    {
+      "id": "ctl-002",
+      "description": "Control packet with zero-hop only (bit 7 set)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "control",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "80 AABBCCDD"
+        }
+      },
+      "binary": "2E 00 80 AABBCCDD",
+      "notes": "control_byte=0x80: bit 7 set, zero-hop only. Direct route with path_count=0 = zero-hop."
+    },
+    {
+      "id": "ctl-003",
+      "description": "Minimal control packet (1 byte)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "control",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "00"
+        }
+      },
+      "binary": "2D 00 00"
+    },
+    {
+      "id": "ctl-004",
+      "description": "Control packet with zero-hop restriction and data via direct routing",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "control",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF 0102030405"
+        }
+      },
+      "binary": "2E 00 FF 0102030405",
+      "notes": "control_byte=0xFF: bit 7 set (zero-hop), all other bits set."
+    }
+  ]
+}

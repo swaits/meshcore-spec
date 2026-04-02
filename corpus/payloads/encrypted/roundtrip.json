@@ -1,0 +1,47 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Encrypted Payload - Roundtrip Verification",
+  "spec_ref": "spec/06-payload-encrypted.md",
+  "protocol_version": 0,
+  "description": "Roundtrip encrypt-then-MAC verification vectors. Each vector provides full key material enabling implementations to verify: (1) encryption produces the given ciphertext, (2) MAC computation produces the given MAC, (3) MAC verification succeeds, (4) decryption recovers the plaintext.",
+  "vectors": [
+    {
+      "id": "rt-enc-001",
+      "description": "Roundtrip: encrypt 'Hello', verify MAC, decrypt back",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "txt_msg",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "EAB5",
+          "ciphertext": "D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "09 00 ABCD EAB5 D9FD218D50A4409143A7243D6D913502",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "48656C6C6F"
+      },
+      "notes": "Verification steps: (1) AES-128-ECB encrypt(key=00..0F, pad('Hello')) -> D9FD...3502. (2) HMAC-SHA256(key=00..1F, ct)[:2] -> EAB5. (3) HMAC verify: recompute and compare. (4) AES-128-ECB decrypt -> 48656C6C6F + 11 zero bytes."
+    },
+    {
+      "id": "rt-enc-002",
+      "description": "Roundtrip with wrong MAC must fail verification",
+      "type": "invalid",
+      "binary": "09 00 ABCD FFFF D9FD218D50A4409143A7243D6D913502",
+      "expected_error": "mac_invalid",
+      "notes": "Same ciphertext as rt-enc-001 but MAC replaced with FFFF. MACThenDecrypt must return 0 (failure)."
+    }
+  ]
+}

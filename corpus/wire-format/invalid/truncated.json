@@ -1,0 +1,65 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Invalid - Truncated Packets",
+  "spec_ref": "spec/01-wire-format.md",
+  "protocol_version": 0,
+  "description": "Tests packets that are truncated at various points, verifying that decoders reject them gracefully.",
+  "vectors": [
+    {
+      "id": "trunc-001",
+      "description": "Empty packet (0 bytes)",
+      "type": "invalid",
+      "binary": "",
+      "expected_error": "too_short",
+      "notes": "Zero-length input. Cannot read header."
+    },
+    {
+      "id": "trunc-002",
+      "description": "Header only (1 byte, FLOOD route)",
+      "type": "invalid",
+      "binary": "0D",
+      "expected_error": "too_short",
+      "notes": "Only header byte. Cannot read path_len."
+    },
+    {
+      "id": "trunc-003",
+      "description": "Header only (1 byte, TRANSPORT_FLOOD route) - transport codes truncated",
+      "type": "invalid",
+      "binary": "0C",
+      "expected_error": "too_short",
+      "notes": "Route type 0x00 requires 4 transport code bytes, but only header is present."
+    },
+    {
+      "id": "trunc-004",
+      "description": "TRANSPORT_FLOOD with partial transport codes (2 of 4 bytes)",
+      "type": "invalid",
+      "binary": "0C 1234",
+      "expected_error": "too_short",
+      "notes": "Only 2 of 4 transport code bytes present."
+    },
+    {
+      "id": "trunc-005",
+      "description": "TRANSPORT_FLOOD with transport codes but no path_len",
+      "type": "invalid",
+      "binary": "0C 0000 0000",
+      "expected_error": "too_short",
+      "notes": "5 bytes: header + 4 transport code bytes. Missing path_len."
+    },
+    {
+      "id": "trunc-006",
+      "description": "FLOOD with path_len indicating 3 hops but only 1 path byte",
+      "type": "invalid",
+      "binary": "0D 03 AA FF",
+      "expected_error": "truncated_path",
+      "notes": "path_len=0x03 means 3 bytes of path expected but only 1 byte follows before the alleged payload. The decoder would read 3 path bytes (AA FF ??) and run out."
+    },
+    {
+      "id": "trunc-007",
+      "description": "FLOOD with 2-byte hash path_len=0x42 (4 path bytes needed) but only 2 available",
+      "type": "invalid",
+      "binary": "0D 42 AABB FF",
+      "expected_error": "truncated_path",
+      "notes": "path_len=0x42: hash_size=2, count=2, need 4 path bytes. Only 2 bytes before payload marker."
+    }
+  ]
+}

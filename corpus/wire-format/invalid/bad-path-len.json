@@ -1,0 +1,57 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Invalid - Bad Path Length Encoding",
+  "spec_ref": "spec/03-path.md",
+  "protocol_version": 0,
+  "description": "Tests invalid path_len values including the reserved hash_size=4 and path overflow conditions.",
+  "vectors": [
+    {
+      "id": "bpl-001",
+      "description": "Reserved hash size code 3 (hash_size would be 4): path_len=0xC0",
+      "type": "invalid",
+      "binary": "0D C0 01000000",
+      "expected_error": "reserved_hash_size",
+      "notes": "path_len=0xC0: bits 6-7=11 (hash size code 3). isValidPathLen returns false because hash_size==4."
+    },
+    {
+      "id": "bpl-002",
+      "description": "Reserved hash size code 3 with non-zero count: path_len=0xC1",
+      "type": "invalid",
+      "binary": "0D C1 AA 01000000",
+      "expected_error": "reserved_hash_size",
+      "notes": "path_len=0xC1: hash size code 3 (reserved), count=1. Invalid regardless of count."
+    },
+    {
+      "id": "bpl-003",
+      "description": "Reserved hash size code 3, max count: path_len=0xFF",
+      "type": "invalid",
+      "binary": "0D FF 0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F 01000000",
+      "expected_error": "reserved_hash_size",
+      "notes": "path_len=0xFF: hash size code 3 (reserved), count=63. Even if hash_size=4 were valid, 63*4=252 > MAX_PATH_SIZE."
+    },
+    {
+      "id": "bpl-004",
+      "description": "Path overflow: hash_size=2, count=33 (66 bytes > MAX_PATH_SIZE)",
+      "type": "invalid",
+      "binary": "0D 61 000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F30313233343536373839 3A3B3C3D3E3F4041 01000000",
+      "expected_error": "path_overflow",
+      "notes": "path_len=0x61: hash_size=2, count=33. 33*2=66 > MAX_PATH_SIZE (64). isValidPathLen returns false."
+    },
+    {
+      "id": "bpl-005",
+      "description": "Path overflow: hash_size=3, count=22 (66 bytes > MAX_PATH_SIZE)",
+      "type": "invalid",
+      "binary": "0D 96 000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F4041 01000000",
+      "expected_error": "path_overflow",
+      "notes": "path_len=0x96: hash_size=3, count=22. 22*3=66 > MAX_PATH_SIZE (64)."
+    },
+    {
+      "id": "bpl-006",
+      "description": "Path overflow edge case: hash_size=1, count=63 is valid (63<=64), but with hash_size=2 and count=33 it overflows",
+      "type": "invalid",
+      "binary": "0D 61 0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F3031323334353637383940 4142 DEADBEEF",
+      "expected_error": "path_overflow",
+      "notes": "path_len=0x61: size code 1 (hash_size=2), count 33. 33*2=66 > 64."
+    }
+  ]
+}

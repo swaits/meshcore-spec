@@ -1,0 +1,141 @@
+{
+  "$schema": "../schema/test-vector.schema.json",
+  "name": "KISS Protocol - Framing",
+  "spec_ref": "spec/19-kiss-protocol.md",
+  "protocol_version": 0,
+  "description": "Tests KISS frame encoding including FEND delimiters, byte stuffing (FESC sequences), and type byte encoding.",
+  "vectors": [
+    {
+      "id": "kiss-001",
+      "description": "Simple data frame: FEND + type(0x00) + data + FEND",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 00 DEADBEEF C0"
+        }
+      },
+      "binary": "3D 00 C0 00 DEADBEEF C0",
+      "notes": "KISS frame: FEND(C0) + DataFrame(00) + 4 bytes data + FEND(C0). Data contains no special bytes so no escaping needed."
+    },
+    {
+      "id": "kiss-002",
+      "description": "Data frame with FEND in data (byte stuffing required)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 00 AA DBDC BB C0"
+        }
+      },
+      "binary": "3D 00 C0 00 AA DBDC BB C0",
+      "notes": "Data byte 0xC0 escaped as DB DC (FESC TFEND). Original data: AA C0 BB."
+    },
+    {
+      "id": "kiss-003",
+      "description": "Data frame with FESC in data (byte stuffing required)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 00 AA DBDD BB C0"
+        }
+      },
+      "binary": "3D 00 C0 00 AA DBDD BB C0",
+      "notes": "Data byte 0xDB escaped as DB DD (FESC TFESC). Original data: AA DB BB."
+    },
+    {
+      "id": "kiss-004",
+      "description": "Data frame with both FEND and FESC in data",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 00 DBDC DBDD C0"
+        }
+      },
+      "binary": "3D 00 C0 00 DBDC DBDD C0",
+      "notes": "Original data: C0 DB. Escaped: DBDC DBDD."
+    },
+    {
+      "id": "kiss-005",
+      "description": "SetHardware frame: GetIdentity (sub-cmd 0x01)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 06 01 C0"
+        }
+      },
+      "binary": "3D 00 C0 06 01 C0",
+      "notes": "KISS frame: FEND + SetHardware(06) + GetIdentity(01) + FEND."
+    },
+    {
+      "id": "kiss-006",
+      "description": "SetHardware response: Identity (sub-cmd 0x81) with pubkey",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 06 81 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA C0"
+        }
+      },
+      "binary": "3D 00 C0 06 81 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA C0",
+      "notes": "KISS response: FEND + SetHardware(06) + Identity(81) + 32-byte pubkey + FEND."
+    }
+  ]
+}

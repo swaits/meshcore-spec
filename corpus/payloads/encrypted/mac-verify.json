@@ -1,0 +1,69 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Encrypted Payload - MAC Verification",
+  "spec_ref": "spec/06-payload-encrypted.md",
+  "protocol_version": 0,
+  "description": "Tests MAC verification: valid MACs must pass, tampered MACs or ciphertext must fail.",
+  "vectors": [
+    {
+      "id": "mac-001",
+      "description": "Valid MAC with known ciphertext",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "txt_msg",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "EAB5",
+          "ciphertext": "D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "09 00 ABCD EAB5 D9FD218D50A4409143A7243D6D913502",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "plaintext": "48656C6C6F"
+      }
+    },
+    {
+      "id": "mac-002",
+      "description": "Tampered MAC (first byte changed)",
+      "type": "invalid",
+      "binary": "09 00 ABCD 00B5 D9FD218D50A4409143A7243D6D913502",
+      "expected_error": "mac_invalid",
+      "notes": "MAC changed from EAB5 to 00B5. MACThenDecrypt must return 0."
+    },
+    {
+      "id": "mac-003",
+      "description": "Tampered MAC (second byte changed)",
+      "type": "invalid",
+      "binary": "09 00 ABCD EA00 D9FD218D50A4409143A7243D6D913502",
+      "expected_error": "mac_invalid",
+      "notes": "MAC changed from EAB5 to EA00."
+    },
+    {
+      "id": "mac-004",
+      "description": "Tampered ciphertext (first byte changed)",
+      "type": "invalid",
+      "binary": "09 00 ABCD EAB5 00FD218D50A4409143A7243D6D913502",
+      "expected_error": "mac_invalid",
+      "notes": "Ciphertext first byte changed from D9 to 00. HMAC over modified ciphertext won't match."
+    },
+    {
+      "id": "mac-005",
+      "description": "Swapped MAC bytes",
+      "type": "invalid",
+      "binary": "09 00 ABCD B5EA D9FD218D50A4409143A7243D6D913502",
+      "expected_error": "mac_invalid",
+      "notes": "MAC bytes reversed: B5EA instead of EAB5."
+    }
+  ]
+}
