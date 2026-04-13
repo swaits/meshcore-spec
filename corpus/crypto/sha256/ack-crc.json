@@ -1,0 +1,112 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "SHA-256 ACK CRC Computation",
+  "spec_ref": "spec/04-payload-ack.md",
+  "protocol_version": 0,
+  "description": "Tests MeshCore ACK CRC computation: SHA-256(timestamp_le || txt_type_attempt || text || sender_pub_key)[0..3]. Each vector presents the full ACK packet that would be returned, along with the crypto_context showing the plaintext fed to SHA-256. Vectors ack-crc-001..004 share timestamp/text/pub_key and differ only in the attempt nibble of txt_type_attempt, demonstrating that each retry produces a distinct ACK CRC.",
+  "vectors": [
+    {
+      "id": "ack-crc-001",
+      "description": "ACK CRC for TXT_MSG 'hello', ts=0x12345678, attempt=0, zero pubkey",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "B2EC0C9E"
+        }
+      },
+      "binary": "0D 00 9E0CECB2",
+      "crypto_context": {
+        "plaintext": "78563412 00 68656C6C6F",
+        "sender_public_key": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "notes": "SHA-256(timestamp(4) || txt_type_attempt(1) || text || sender_pub_key(32))[0..3] = 9E0CECB2 (LE). Displayed ack_crc field is the uint32 value 0xB2EC0C9E."
+    },
+    {
+      "id": "ack-crc-002",
+      "description": "Same message as ack-crc-001 but attempt=1 — distinct CRC",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "13F08151"
+        }
+      },
+      "binary": "0D 00 5181F013",
+      "crypto_context": {
+        "plaintext": "78563412 01 68656C6C6F",
+        "sender_public_key": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "notes": "txt_type_attempt=0x01 (TXT_TYPE_PLAIN<<2 | attempt=1). Confirms attempt increment changes ACK CRC."
+    },
+    {
+      "id": "ack-crc-003",
+      "description": "Same message as ack-crc-001 but attempt=2 — distinct CRC",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "4AD71DDF"
+        }
+      },
+      "binary": "0D 00 DF1DD74A",
+      "crypto_context": {
+        "plaintext": "78563412 02 68656C6C6F",
+        "sender_public_key": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "id": "ack-crc-004",
+      "description": "Same message as ack-crc-001 but attempt=3 — distinct CRC (max attempt)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "1A537B8F"
+        }
+      },
+      "binary": "0D 00 8F7B531A",
+      "crypto_context": {
+        "plaintext": "78563412 03 68656C6C6F",
+        "sender_public_key": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "notes": "attempt=3 is the maximum value representable in the 2-bit attempt field."
+    }
+  ]
+}
