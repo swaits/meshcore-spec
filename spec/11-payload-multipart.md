@@ -59,6 +59,32 @@ Total payload: 5 bytes (1 byte header + 4 byte CRC).
 Multipart ACKs are used to send additional ACK retransmissions for reliability.
 The `remaining` field indicates how many more ACK packets follow this one.
 
+### Multipart ACK Usage Constraints
+
+- A sender MUST only emit MULTIPART-wrapped ACKs on direct-routed return
+  paths (i.e., when a direct path to the original sender is known). When the
+  return path is unknown, the sender MUST fall back to emitting a plain
+  PAYLOAD_TYPE_ACK via flood routing. This reflects the firmware behavior in
+  `Mesh::routeDirectRecvAcks()` (which emits MULTIPART copies only when a
+  direct path is available) and `BaseChatMesh::sendAckTo()` (which falls back
+  to `sendFloodScoped()` when `out_path_len == OUT_PATH_UNKNOWN`).
+- All MULTIPART-ACK copies and the final plain ACK for the same acknowledged
+  message carry an identical 4-byte `ack_crc`. Receivers MUST treat them as
+  the same logical ACK: the first one received satisfies the acknowledgment,
+  and subsequent duplicates MUST be deduplicated per
+  [Section 16](16-packet-hash.md) (each copy has a distinct packet hash
+  because the wrapper byte differs, so ordinary dedup does not suppress them
+  on the wire — application-level dedup by `ack_crc` is required).
+- The typical inter-copy delay in the reference implementation is
+  approximately 300 ms plus the direct retransmit delay
+  (`Mesh::routeDirectRecvAcks()`); exact timing is implementation-defined.
+- The number of extra copies is configured via `getExtraAckTransmitCount()`
+  and is implementation-defined. The firmware default is 0 (plain ACK only).
+
+A receiver MUST NOT infer delivery reliability from the `remaining` counter
+alone: the counter is a hint about how many additional copies the sender
+intends to emit, not a guarantee that they will arrive.
+
 ### Encoding (Multipart ACK)
 
 1. Set first byte to `(remaining << 4) | PAYLOAD_TYPE_ACK`.
@@ -85,4 +111,8 @@ The `remaining` field indicates how many more ACK packets follow this one.
 ### Reference Implementation
 
 - `Mesh::createMultiAck()` in `src/Mesh.cpp` — Encoding
+- `Mesh::routeDirectRecvAcks()` in `src/Mesh.cpp` — Direct-only gating and
+  inter-copy spacing
+- `BaseChatMesh::sendAckTo()` in `src/helpers/BaseChatMesh.cpp` — Flood
+  fallback when no direct return path is known
 - `Mesh::onRecvPacket()`, case `PAYLOAD_TYPE_MULTIPART` — Decoding
