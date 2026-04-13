@@ -98,6 +98,78 @@ Packets are prioritized for transmission:
 | 5 | Trace | Trace forwarding |
 | N (hash_count) | Flood forwarded | Lower priority for more distant sources |
 
+### Sender Behavior (Informational)
+
+This section documents sender-side behavior that is not fully constrained by
+the wire protocol but is common across interoperating implementations. The
+reference firmware establishes the baseline; client implementations SHOULD
+follow these patterns to interoperate cleanly. Specific numeric tuning
+parameters (timeouts, queue sizes, retry counts) are implementation-defined.
+
+#### Path Learning
+
+- When a node receives a flood-routed packet from a peer, the accumulated
+  `path` field records the hops the packet traversed. The receiving node
+  SHOULD cache the **reversed** path keyed by the peer's source hash and
+  subsequently use that cached path to send direct-routed traffic back.
+- When multiple paths are observed for the same peer, implementations SHOULD
+  prefer the higher-quality path. The reference implementation's heuristic is
+  to replace the cached path only if the new path's hash size is not smaller
+  and its SNR is not materially worse than the cached path's SNR. The exact
+  threshold is implementation-defined.
+- Cached paths SHOULD expire after a period of inactivity; they MAY be
+  refreshed whenever a new packet is observed from the same peer. The
+  reference implementation does not persist paths across reboots.
+
+#### PATH_RETURN
+
+After receiving a flood-routed DM, a receiver MAY proactively emit a
+PAYLOAD_TYPE_PATH packet ([Section 9](09-payload-path.md)) that embeds the
+reversed path and optionally an ACK as extra data. This lets the original
+sender learn a direct return path before its first reply, converting
+subsequent traffic from flood to direct routing. See
+`BaseChatMesh::onPeerDataRecv()` and `Mesh::createPathReturn()`.
+
+#### Flood Fallback and Retries
+
+- A sender SHOULD track outstanding DMs by their expected `ack_crc`
+  (see [Section 4](04-payload-ack.md)) and retry transmissions that are not
+  acknowledged within a timeout. Timeout values and backoff schedules are
+  implementation-defined and typically depend on LoRa airtime parameters.
+- On each retry, the sender MUST increment the `attempt` sub-field of
+  `txt_type_attempt` (see
+  [Section 6](06-payload-encrypted.md#plaintext-format-txt_msg)). The
+  `timestamp` field MUST be held constant across retries of the same logical
+  message. This changes the ACK CRC per attempt, letting the sender attribute
+  a returned ACK to a specific transmission.
+- After N unsuccessful direct-routed retries, the sender SHOULD discard the
+  cached direct path and retry via flood routing, so that a stale cached path
+  does not indefinitely block delivery. The value of N is
+  implementation-defined (the reference is small — single-digit).
+- On receipt of a matching ACK (plain or MULTIPART, per
+  [Section 11](11-payload-multipart.md#multipart-ack-usage-constraints)),
+  the sender MUST cancel any queued retries for that ACK CRC.
+
+#### Transmission Priority (sender-originated)
+
+Client implementations that maintain a TX queue SHOULD prioritize
+sender-originated packets roughly as follows (highest first):
+
+| Priority | Packet Type |
+|----------|-------------|
+| 0 | ACK (plain or MULTIPART) |
+| 1 | PATH / PATH_RETURN |
+| 2 | Direct-routed reply (DM) |
+| 3 | Flood-routed reply (DM) |
+| 4 | Request/response (e.g., login, keep-alive) |
+| 5 | Group text / group data |
+| 6 | Advertisement |
+
+This ordering complements the forwarding-priority table above: ACKs and
+PATH returns are time-sensitive and short; direct replies take precedence
+over flood replies to reduce channel occupancy. Exact ordering and queue
+depth are implementation-defined.
+
 ### Packet Deduplication
 
 Before processing or forwarding any packet, nodes check if the packet has
