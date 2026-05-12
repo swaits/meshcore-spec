@@ -30,6 +30,14 @@
   outline: none;
 }
 
+.version-picker-name {
+  color: var(--fg);
+  font-weight: 600;
+  padding: 0.2em 0.45em;
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+
 .version-picker-floating {
   position: fixed;
   top: 0.5em;

@@ -1,21 +1,21 @@
 // version-picker.js
 //
-// Renders a version dropdown in the mdBook menu bar for multi-version
-// deployments. Reads /<base>/versions.json at page load and lets the
-// reader switch to the same page in a different version.
-//
-// The deployed URL layout is <base>/<version>/<page>, where <version>
-// is "latest" or a semver-like tag (e.g., "v0.1.0"). When the reader
-// chooses a different version, the picker navigates to the matching
-// page under the new version subtree; if that page doesn't exist in
-// the target version, the browser will show a 404, which is fine for
-// a v0.1 deployment.
+// Shows the current spec version in the mdBook menu bar. On a deployed
+// multi-version site (path like <base>/<version>/<page>) it upgrades
+// into a dropdown that switches between versions. On a single-version
+// or local build (file:// or no versions.json reachable) it just
+// renders a static "version: <name>" label so the reader can always
+// see which version they're reading.
 
 (function () {
   'use strict';
 
   // Match the version segment in a path. Accepts "latest" or "vX[.Y[.Z]][-pre]".
   var VERSION_RE = /\/(latest|v\d+(?:\.\d+){0,2}(?:-[A-Za-z0-9.]+)?)(\/|$)/;
+
+  function labelFor(version) {
+    return (version === 'latest') ? 'latest (main)' : version;
+  }
 
   function parseLocation() {
     var path = window.location.pathname;
@@ -28,16 +28,35 @@
     return { version: version, basePath: basePath, pagePath: pagePath };
   }
 
-  function buildPicker(versions, current, basePath, pagePath) {
+  function buildLabel(version) {
+    var wrap = document.createElement('div');
+    wrap.className = 'version-picker version-picker-label-only';
+    wrap.setAttribute('role', 'group');
+    wrap.setAttribute('aria-label', 'Spec version');
+
+    var prefix = document.createElement('span');
+    prefix.className = 'version-picker-label';
+    prefix.textContent = 'version:';
+    wrap.appendChild(prefix);
+
+    var name = document.createElement('span');
+    name.className = 'version-picker-name';
+    name.textContent = labelFor(version);
+    wrap.appendChild(name);
+
+    return wrap;
+  }
+
+  function buildDropdown(versions, current, basePath, pagePath) {
     var wrap = document.createElement('div');
     wrap.className = 'version-picker';
     wrap.setAttribute('role', 'group');
     wrap.setAttribute('aria-label', 'Spec version');
 
-    var label = document.createElement('span');
-    label.className = 'version-picker-label';
-    label.textContent = 'version:';
-    wrap.appendChild(label);
+    var prefix = document.createElement('span');
+    prefix.className = 'version-picker-label';
+    prefix.textContent = 'version:';
+    wrap.appendChild(prefix);
 
     var select = document.createElement('select');
     select.className = 'version-picker-select';
@@ -47,7 +66,7 @@
       var v = versions[i];
       var opt = document.createElement('option');
       opt.value = v;
-      opt.textContent = (v === 'latest') ? 'latest (main)' : v;
+      opt.textContent = labelFor(v);
       if (v === current) opt.selected = true;
       select.appendChild(opt);
     }
@@ -62,8 +81,29 @@
     return wrap;
   }
 
+  function mount(picker) {
+    var slot = document.querySelector('.right-buttons');
+    if (slot) {
+      slot.insertBefore(picker, slot.firstChild);
+    } else {
+      picker.classList.add('version-picker-floating');
+      document.body.appendChild(picker);
+    }
+  }
+
   function install() {
     var loc = parseLocation();
+    var current = loc ? loc.version : 'latest';
+
+    // Always mount the label first — visible immediately, even before
+    // (or without) a versions.json fetch.
+    var picker = buildLabel(current);
+    mount(picker);
+
+    // Only attempt the upgrade-to-dropdown path when we have a real
+    // version segment in the URL. Without one (e.g., file:// or local
+    // `just build` opened directly), we can't compute navigation
+    // targets, so leave the label as-is.
     if (!loc) return;
 
     fetch(loc.basePath + 'versions.json', { cache: 'no-cache' })
@@ -74,21 +114,13 @@
         //   ["latest", "v0.1.0"]
         //   { "versions": ["latest", "v0.1.0"] }
         var versions = Array.isArray(data) ? data : (data && data.versions);
-        if (!versions || !versions.length) return;
+        if (!versions || versions.length < 2) return;
 
-        var picker = buildPicker(versions, loc.version, loc.basePath, loc.pagePath);
-
-        // Prefer slotting into mdBook's menu bar; fall back to floating.
-        var slot = document.querySelector('.right-buttons');
-        if (slot) {
-          slot.insertBefore(picker, slot.firstChild);
-        } else {
-          picker.classList.add('version-picker-floating');
-          document.body.appendChild(picker);
-        }
+        var dropdown = buildDropdown(versions, current, loc.basePath, loc.pagePath);
+        picker.replaceWith(dropdown);
       })
       .catch(function (err) {
-        // Non-fatal: dev / file:// / pre-deploy will all land here.
+        // Non-fatal: keep the label-only widget mounted.
         if (window.console) console.warn('version-picker:', err);
       });
   }
