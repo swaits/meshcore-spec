@@ -2,12 +2,37 @@
 
 ## Section 0: Overview
 
-### Status
+### Status and Provenance
 
-This document specifies the MeshCore mesh networking protocol as implemented in
-the [reference firmware](https://github.com/meshcore-dev/MeshCore). It is
-derived from the source code and official documentation, and serves as the
-authoritative definition of the wire format for conformance testing.
+> **This is an unofficial, independent specification.** It is **not** part of
+> the upstream [MeshCore project](https://github.com/meshcore-dev/MeshCore),
+> not affiliated with or endorsed by its maintainers, and not authored by
+> them. Read this section before relying on the spec for anything
+> load-bearing.
+
+This document was primarily written by an AI (Claude, by Anthropic — mostly
+the Opus 4.x family) under the direction of Stephen Waits, with human
+proofreading and editing on top. Substantive edits — additions, audit passes,
+errata fixes — are produced through model-driven analysis of the upstream
+MeshCore C++ source and reviewed before commit.
+
+The **upstream MeshCore C++ firmware is the source of truth** for all
+protocol behavior. This spec is downstream and derivative. Whenever the spec
+and the upstream C++ disagree, **upstream wins** — and a fix to this spec is
+filed against this repo, not against MeshCore. Each substantive change in
+[CHANGELOG.md](https://github.com/swaits/meshcore-spec/blob/main/CHANGELOG.md)
+records the upstream commit hash it was validated against.
+
+Refinements have also been driven in part by observations from building
+DongLoRa firmware and apps against live MeshCore deployments. Where DongLoRa
+behavior diverges from upstream, this spec follows upstream and treats the
+DongLoRa side as a follow-up bug, not a spec change.
+
+Conformance against the [test corpus](https://github.com/swaits/meshcore-spec/tree/main/corpus)
+is a useful signal but **not a substitute** for cross-checking against
+upstream firmware. If you find a divergence from upstream, please
+[file an issue](https://github.com/swaits/meshcore-spec/issues) — that is
+exactly the kind of report this project exists to catch.
 
 ### Scope
 
