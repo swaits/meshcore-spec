@@ -112,14 +112,20 @@ parameters (timeouts, queue sizes, retry counts) are implementation-defined.
   `path` field records the hops the packet traversed. The receiving node
   SHOULD cache the **reversed** path keyed by the peer's source hash and
   subsequently use that cached path to send direct-routed traffic back.
-- When multiple paths are observed for the same peer, implementations SHOULD
-  prefer the higher-quality path. The reference implementation's heuristic is
-  to replace the cached path only if the new path's hash size is not smaller
-  and its SNR is not materially worse than the cached path's SNR. The exact
-  threshold is implementation-defined.
-- Cached paths SHOULD expire after a period of inactivity; they MAY be
-  refreshed whenever a new packet is observed from the same peer. The
-  reference implementation does not persist paths across reboots.
+- When multiple paths are observed for the same peer, the **reference
+  implementation unconditionally replaces** the cached path with the most
+  recently observed one (`BaseChatMesh::onContactPathRecv()` in
+  `src/helpers/BaseChatMesh.cpp` — its source comment explicitly flags
+  hash-size or SNR-based selection as future work). Implementations MAY
+  layer a quality heuristic on top (e.g., prefer larger hash sizes or
+  better SNR margin) if they store and compare multiple candidate paths,
+  but this is not part of the reference behavior and the exact policy is
+  implementation-defined.
+- Cached paths in the reference implementation do **not** expire on a
+  timer; they live as long as the contact entry, and are overwritten
+  whenever a fresher path is observed. Implementations MAY add a TTL or
+  age-based eviction policy as an extension. The reference implementation
+  does not persist paths across reboots.
 
 #### PATH_RETURN
 
@@ -129,6 +135,12 @@ reversed path and optionally an ACK as extra data. This lets the original
 sender learn a direct return path before its first reply, converting
 subsequent traffic from flood to direct routing. See
 `BaseChatMesh::onPeerDataRecv()` and `Mesh::createPathReturn()`.
+
+The reference implementation schedules the PATH_RETURN transmission with a
+small delay (`TXT_ACK_DELAY`, default 200 ms) to avoid colliding with other
+packets the receiver is about to emit. Exact timing is
+implementation-defined; the goal is to space PATH_RETURN, ACK, and any
+application reply across distinct on-air slots.
 
 #### Flood Fallback and Retries
 
