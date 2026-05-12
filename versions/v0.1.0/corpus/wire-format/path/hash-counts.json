@@ -1,0 +1,260 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Path - Hash Counts",
+  "spec_ref": "versions/v0.1.0/03-path.md",
+  "protocol_version": 0,
+  "description": "Tests various hash count values including zero, small, and maximum values for each hash size.",
+  "vectors": [
+    {
+      "id": "hc-000",
+      "description": "Zero hops (hash_count=0, hash_size=1) - empty path",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 00 01000000",
+      "notes": "path_len=0x00. Zero-length path."
+    },
+    {
+      "id": "hc-001",
+      "description": "Zero hops with hash_size=2 - still empty path",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 2,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 40 01000000",
+      "notes": "path_len=0x40: hash_size=2, count=0. Path is still 0 bytes even though hash_size>1."
+    },
+    {
+      "id": "hc-002",
+      "description": "Zero hops with hash_size=3",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 3,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 80 01000000",
+      "notes": "path_len=0x80: hash_size=3, count=0. Path is 0 bytes."
+    },
+    {
+      "id": "hc-010",
+      "description": "Maximum count for hash_size=1: 63 hops, 63 bytes",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 63,
+          "hashes": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08",
+            "09",
+            "0A",
+            "0B",
+            "0C",
+            "0D",
+            "0E",
+            "0F",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "1A",
+            "1B",
+            "1C",
+            "1D",
+            "1E",
+            "1F",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "2A",
+            "2B",
+            "2C",
+            "2D",
+            "2E",
+            "2F",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "3A",
+            "3B",
+            "3C",
+            "3D",
+            "3E",
+            "3F"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 3F 0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F 01000000",
+      "notes": "path_len=0x3F: hash_size=1, count=63. Path: 63 bytes. Maximum valid path for 1-byte hashes."
+    },
+    {
+      "id": "hc-020",
+      "description": "Maximum count for hash_size=2: 32 hops, 64 bytes (exactly MAX_PATH_SIZE)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 2,
+          "hash_count": 32,
+          "hashes": [
+            "0001",
+            "0203",
+            "0405",
+            "0607",
+            "0809",
+            "0A0B",
+            "0C0D",
+            "0E0F",
+            "1011",
+            "1213",
+            "1415",
+            "1617",
+            "1819",
+            "1A1B",
+            "1C1D",
+            "1E1F",
+            "2021",
+            "2223",
+            "2425",
+            "2627",
+            "2829",
+            "2A2B",
+            "2C2D",
+            "2E2F",
+            "3031",
+            "3233",
+            "3435",
+            "3637",
+            "3839",
+            "3A3B",
+            "3C3D",
+            "3E3F"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 60 000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F 01000000",
+      "notes": "path_len=0x60: bits 6-7=01 (hash_size=2), bits 0-5=32. Path: 64 bytes = MAX_PATH_SIZE. Maximum valid for 2-byte hashes."
+    },
+    {
+      "id": "hc-030",
+      "description": "Maximum count for hash_size=3: 21 hops, 63 bytes",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 3,
+          "hash_count": 21,
+          "hashes": [
+            "000102",
+            "030405",
+            "060708",
+            "090A0B",
+            "0C0D0E",
+            "0F1011",
+            "121314",
+            "151617",
+            "18191A",
+            "1B1C1D",
+            "1E1F20",
+            "212223",
+            "242526",
+            "272829",
+            "2A2B2C",
+            "2D2E2F",
+            "303132",
+            "333435",
+            "363738",
+            "393A3B",
+            "3C3D3E"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 95 000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E 01000000",
+      "notes": "path_len=0x95: bits 6-7=10 (hash_size=3), bits 0-5=21. Path: 63 bytes. Maximum valid for 3-byte hashes (22*3=66 would overflow)."
+    }
+  ]
+}

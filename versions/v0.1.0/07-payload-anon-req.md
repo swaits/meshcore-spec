@@ -66,7 +66,7 @@ Header payload type field: `0x07` (ANON_REQ)
 - [Section 6: Encrypted Payloads](06-payload-encrypted.md) — Standard encrypted format
 - [Section 14: Cryptography](14-crypto.md) — Encrypt-then-MAC
 - [Section 15: Identity](15-identity.md) — ECDH key exchange
-- Test vectors: [`corpus/payloads/anon-req/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/payloads/anon-req/)
+- Test vectors: [`corpus/payloads/anon-req/`](https://github.com/swaits/meshcore-spec/tree/main/versions/v0.1.0/corpus/payloads/anon-req/)
 
 ### Reference Implementation
 

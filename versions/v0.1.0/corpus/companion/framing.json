@@ -1,0 +1,74 @@
+{
+  "$schema": "../schema/test-vector.schema.json",
+  "name": "Companion Protocol - Framing",
+  "spec_ref": "versions/v0.1.0/18-companion-protocol.md",
+  "protocol_version": 0,
+  "description": "Tests companion protocol frame encoding: type byte followed by variable-length data.",
+  "vectors": [
+    {
+      "id": "comp-001",
+      "description": "CMD_APP_START (0x01) - no data",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "01"
+        }
+      },
+      "binary": "3D 00 01",
+      "notes": "Companion command type 0x01 = CMD_APP_START. No payload data."
+    },
+    {
+      "id": "comp-002",
+      "description": "CMD_DEVICE_QUERY (0x02) - no data",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "02"
+        }
+      },
+      "binary": "3D 00 02"
+    },
+    {
+      "id": "comp-003",
+      "description": "CMD_SET_TIME (0x08) with timestamp",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "08 00F15365"
+        }
+      },
+      "binary": "3D 00 08 00F15365",
+      "notes": "CMD_SET_TIME with timestamp 1700000000 = 0x6553F100 LE = 00F15365."
+    }
+  ]
+}

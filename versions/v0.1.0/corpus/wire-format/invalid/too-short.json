@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Invalid - Too Short Packets",
+  "spec_ref": "versions/v0.1.0/01-wire-format.md",
+  "protocol_version": 0,
+  "description": "Tests packets that are shorter than the minimum required size for their route type.",
+  "vectors": [
+    {
+      "id": "short-001",
+      "description": "1-byte packet (FLOOD): only header, missing path_len and payload",
+      "type": "invalid",
+      "binary": "0D",
+      "expected_error": "too_short",
+      "notes": "Minimum FLOOD packet is 3 bytes. This is 1."
+    },
+    {
+      "id": "short-002",
+      "description": "2-byte packet (FLOOD): header + path_len, missing payload",
+      "type": "invalid",
+      "binary": "0D 00",
+      "expected_error": "empty_payload",
+      "notes": "Header + path_len present but no payload. i=2, len=2, so i>=len."
+    },
+    {
+      "id": "short-003",
+      "description": "5-byte TRANSPORT_FLOOD: header + transport codes, missing path_len",
+      "type": "invalid",
+      "binary": "0C 00000000",
+      "expected_error": "too_short",
+      "notes": "TRANSPORT_FLOOD needs at least 7 bytes (1+4+1+1). This has 5."
+    },
+    {
+      "id": "short-004",
+      "description": "6-byte TRANSPORT_FLOOD: header + transport + path_len, missing payload",
+      "type": "invalid",
+      "binary": "0C 00000000 00",
+      "expected_error": "empty_payload",
+      "notes": "All framing present but zero payload."
+    },
+    {
+      "id": "short-005",
+      "description": "FLOOD with path consuming all remaining bytes",
+      "type": "invalid",
+      "binary": "0D 03 AABBCC",
+      "expected_error": "empty_payload",
+      "notes": "header(1) + path_len(1) + path(3) = 5 bytes = total. i=5, len=5."
+    }
+  ]
+}

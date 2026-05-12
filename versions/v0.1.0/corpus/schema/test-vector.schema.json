@@ -1,0 +1,459 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/meshcore-spec/corpus/schema/test-vector.schema.json",
+  "title": "MeshCore Test Vector File",
+  "description": "Schema for MeshCore protocol test vector files. Each file contains a named collection of test vectors for a specific aspect of the protocol.",
+  "type": "object",
+  "required": ["name", "protocol_version", "vectors"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name for this test vector collection"
+    },
+    "spec_ref": {
+      "type": "string",
+      "description": "Path to the relevant spec section (e.g., 'src/01-wire-format.md')"
+    },
+    "protocol_version": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3,
+      "description": "MeshCore protocol version (0-3, encoded in header bits 6-7)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional longer description of what this file tests"
+    },
+    "vectors": {
+      "type": "array",
+      "description": "Array of test vectors",
+      "items": {
+        "$ref": "#/$defs/test_vector"
+      }
+    }
+  },
+  "$defs": {
+    "hex_string": {
+      "type": "string",
+      "pattern": "^[0-9A-F\\s]*$",
+      "description": "Hex-encoded binary data. MUST be uppercase. Whitespace allowed and stripped on parse."
+    },
+    "header": {
+      "type": "object",
+      "required": ["version", "payload_type", "route_type"],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3,
+          "description": "Protocol version (header bits 6-7)"
+        },
+        "payload_type": {
+          "enum": [
+            "request",
+            "response",
+            "txt_msg",
+            "ack",
+            "advert",
+            "grp_txt",
+            "grp_data",
+            "anon_req",
+            "path",
+            "trace",
+            "multipart",
+            "control",
+            "raw_custom"
+          ],
+          "description": "Payload type (header bits 2-5). Values 0x0C-0x0E are reserved."
+        },
+        "route_type": {
+          "enum": [
+            "transport_flood",
+            "flood",
+            "direct",
+            "transport_direct"
+          ],
+          "description": "Route type (header bits 0-1). 0=transport_flood, 1=flood, 2=direct, 3=transport_direct"
+        }
+      }
+    },
+    "path_info": {
+      "type": "object",
+      "required": ["hash_size", "hash_count", "hashes"],
+      "additionalProperties": false,
+      "properties": {
+        "hash_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3,
+          "description": "Size of each hash in bytes (1, 2, or 3). Encoded as (hash_size - 1) in bits 6-7 of path_len byte."
+        },
+        "hash_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 63,
+          "description": "Number of hashes in path (bits 0-5 of path_len byte)"
+        },
+        "hashes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hex_string"
+          },
+          "description": "Array of hex-encoded path hashes. Length MUST equal hash_count. Each hash MUST be hash_size bytes."
+        }
+      }
+    },
+    "transport_codes": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 65535
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "Two 16-bit transport codes [code1, code2], encoded as little-endian uint16"
+    },
+    "payload_ack": {
+      "type": "object",
+      "required": ["ack_crc"],
+      "additionalProperties": false,
+      "properties": {
+        "ack_crc": {
+          "$ref": "#/$defs/hex_string",
+          "description": "4-byte ACK CRC as hex (big-endian representation of the value, wire encoding is little-endian)"
+        }
+      }
+    },
+    "payload_advert": {
+      "type": "object",
+      "required": ["pub_key", "timestamp", "signature"],
+      "additionalProperties": false,
+      "properties": {
+        "pub_key": {
+          "$ref": "#/$defs/hex_string",
+          "description": "32-byte Ed25519 public key"
+        },
+        "timestamp": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "4-byte Unix timestamp"
+        },
+        "signature": {
+          "$ref": "#/$defs/hex_string",
+          "description": "64-byte Ed25519 signature over (pub_key + timestamp_le + app_data)"
+        },
+        "app_data": {
+          "$ref": "#/$defs/advert_app_data",
+          "description": "Optional advertisement application data"
+        }
+      }
+    },
+    "advert_app_data": {
+      "type": "object",
+      "required": ["flags"],
+      "additionalProperties": false,
+      "properties": {
+        "flags": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "8-bit flags: bits 0-3 = type (0=None,1=Chat,2=Repeater,3=Room,4=Sensor), bit 4 = has_location, bit 5 = has_feat1, bit 6 = has_feat2, bit 7 = has_name"
+        },
+        "latitude": {
+          "type": "integer",
+          "description": "Latitude * 1,000,000 as int32 (present when flags bit 4 set)"
+        },
+        "longitude": {
+          "type": "integer",
+          "description": "Longitude * 1,000,000 as int32 (present when flags bit 4 set)"
+        },
+        "feat1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Feature field 1 as uint16 (present when flags bit 5 set)"
+        },
+        "feat2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Feature field 2 as uint16 (present when flags bit 6 set)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Node name as UTF-8 string (present when flags bit 7 set)"
+        }
+      }
+    },
+    "payload_encrypted": {
+      "type": "object",
+      "required": ["dest_hash", "src_hash", "cipher_mac", "ciphertext"],
+      "additionalProperties": false,
+      "properties": {
+        "dest_hash": {
+          "$ref": "#/$defs/hex_string",
+          "description": "Destination hash (PATH_HASH_SIZE bytes, default 1)"
+        },
+        "src_hash": {
+          "$ref": "#/$defs/hex_string",
+          "description": "Source hash (PATH_HASH_SIZE bytes, default 1)"
+        },
+        "cipher_mac": {
+          "$ref": "#/$defs/hex_string",
+          "description": "2-byte HMAC-SHA256 truncated MAC"
+        },
+        "ciphertext": {
+          "$ref": "#/$defs/hex_string",
+          "description": "AES-128-ECB encrypted data (zero-padded to block boundary)"
+        }
+      }
+    },
+    "payload_anon_req": {
+      "type": "object",
+      "required": ["dest_hash", "sender_pub_key", "cipher_mac", "ciphertext"],
+      "additionalProperties": false,
+      "properties": {
+        "dest_hash": {
+          "$ref": "#/$defs/hex_string",
+          "description": "Destination hash (PATH_HASH_SIZE bytes)"
+        },
+        "sender_pub_key": {
+          "$ref": "#/$defs/hex_string",
+          "description": "32-byte Ed25519 public key of sender"
+        },
+        "cipher_mac": {
+          "$ref": "#/$defs/hex_string",
+          "description": "2-byte cipher MAC"
+        },
+        "ciphertext": {
+          "$ref": "#/$defs/hex_string",
+          "description": "Encrypted data"
+        }
+      }
+    },
+    "payload_group": {
+      "type": "object",
+      "required": ["channel_hash", "cipher_mac", "ciphertext"],
+      "additionalProperties": false,
+      "properties": {
+        "channel_hash": {
+          "$ref": "#/$defs/hex_string",
+          "description": "1-byte channel hash (first byte of SHA-256 of channel shared key)"
+        },
+        "cipher_mac": {
+          "$ref": "#/$defs/hex_string",
+          "description": "2-byte cipher MAC"
+        },
+        "ciphertext": {
+          "$ref": "#/$defs/hex_string",
+          "description": "Encrypted data"
+        }
+      }
+    },
+    "payload_trace": {
+      "type": "object",
+      "required": ["tag", "auth_code", "flags"],
+      "additionalProperties": false,
+      "properties": {
+        "tag": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "4-byte random tag set by initiator"
+        },
+        "auth_code": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "4-byte authentication code"
+        },
+        "flags": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "1-byte flags (bits 0-1 encode path hash size)"
+        }
+      }
+    },
+    "payload_multipart": {
+      "type": "object",
+      "required": ["remaining", "sub_type", "sub_payload"],
+      "additionalProperties": false,
+      "properties": {
+        "remaining": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 15,
+          "description": "Remaining parts count (upper 4 bits of first byte)"
+        },
+        "sub_type": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 15,
+          "description": "Sub-payload type (lower 4 bits of first byte)"
+        },
+        "sub_payload": {
+          "$ref": "#/$defs/hex_string",
+          "description": "Sub-payload data"
+        }
+      }
+    },
+    "payload_control": {
+      "type": "object",
+      "required": ["data"],
+      "additionalProperties": false,
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/hex_string",
+          "description": "Raw control data bytes"
+        }
+      }
+    },
+    "payload_raw": {
+      "type": "object",
+      "required": ["data"],
+      "additionalProperties": false,
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/hex_string",
+          "description": "Raw custom payload bytes"
+        }
+      }
+    },
+    "crypto_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sender_private_key": {
+          "$ref": "#/$defs/hex_string",
+          "description": "64-byte Ed25519 private key of sender"
+        },
+        "sender_public_key": {
+          "$ref": "#/$defs/hex_string",
+          "description": "32-byte Ed25519 public key of sender"
+        },
+        "recipient_private_key": {
+          "$ref": "#/$defs/hex_string",
+          "description": "64-byte Ed25519 private key of recipient"
+        },
+        "recipient_public_key": {
+          "$ref": "#/$defs/hex_string",
+          "description": "32-byte Ed25519 public key of recipient"
+        },
+        "shared_secret": {
+          "$ref": "#/$defs/hex_string",
+          "description": "32-byte ECDH shared secret"
+        },
+        "encryption_key": {
+          "$ref": "#/$defs/hex_string",
+          "description": "16-byte AES-128 key (first 16 bytes of shared secret)"
+        },
+        "plaintext": {
+          "$ref": "#/$defs/hex_string",
+          "description": "Plaintext before encryption"
+        }
+      }
+    },
+    "structured_packet": {
+      "type": "object",
+      "required": ["header", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "header": {
+          "$ref": "#/$defs/header"
+        },
+        "transport_codes": {
+          "$ref": "#/$defs/transport_codes"
+        },
+        "path": {
+          "$ref": "#/$defs/path_info"
+        },
+        "payload": {
+          "description": "Payload structure — the schema depends on the payload_type in header",
+          "anyOf": [
+            { "$ref": "#/$defs/payload_ack" },
+            { "$ref": "#/$defs/payload_advert" },
+            { "$ref": "#/$defs/payload_encrypted" },
+            { "$ref": "#/$defs/payload_anon_req" },
+            { "$ref": "#/$defs/payload_group" },
+            { "$ref": "#/$defs/payload_trace" },
+            { "$ref": "#/$defs/payload_multipart" },
+            { "$ref": "#/$defs/payload_control" },
+            { "$ref": "#/$defs/payload_raw" }
+          ]
+        }
+      }
+    },
+    "test_vector": {
+      "type": "object",
+      "required": ["id", "description", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "description": "Unique identifier within this file (e.g., 'ack-001')"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of what this vector tests"
+        },
+        "type": {
+          "enum": ["encode_decode", "decode_only", "invalid"],
+          "description": "Test mode: encode_decode (bidirectional), decode_only (binary->structured), invalid (must reject)"
+        },
+        "structured": {
+          "$ref": "#/$defs/structured_packet",
+          "description": "Structured packet representation (required for encode_decode and decode_only)"
+        },
+        "binary": {
+          "$ref": "#/$defs/hex_string",
+          "description": "Wire-format binary encoding as hex (required for all types)"
+        },
+        "crypto_context": {
+          "$ref": "#/$defs/crypto_context",
+          "description": "Cryptographic key material for encrypted payload vectors"
+        },
+        "expected_error": {
+          "type": "string",
+          "description": "Expected error category for invalid vectors"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional notes explaining the test vector"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "type": { "const": "encode_decode" } }
+          },
+          "then": {
+            "required": ["structured", "binary"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "decode_only" } }
+          },
+          "then": {
+            "required": ["structured", "binary"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "invalid" } }
+          },
+          "then": {
+            "required": ["binary"]
+          }
+        }
+      ]
+    }
+  }
+}

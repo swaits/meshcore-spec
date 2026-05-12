@@ -113,7 +113,7 @@ is an in-memory sentinel only and MUST NOT appear on the wire. A header of
 
 - [Section 1: Wire Format](01-wire-format.md) — Overall packet structure
 - [Section 3: Path](03-path.md) — Path encoding
-- Test vectors: [`corpus/wire-format/header/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/wire-format/header/)
+- Test vectors: [`corpus/wire-format/header/`](https://github.com/swaits/meshcore-spec/tree/main/versions/v0.1.0/corpus/wire-format/header/)
 
 ### Reference Implementation
 

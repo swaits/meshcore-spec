@@ -131,7 +131,7 @@ A conforming decoder MUST reject packets with any of the following:
 
 - [Section 2: Header](02-header.md) — Header byte encoding details
 - [Section 3: Path](03-path.md) — Path length encoding and path field
-- Test vectors: [`corpus/wire-format/framing/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/wire-format/framing/), [`corpus/wire-format/invalid/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/wire-format/invalid/)
+- Test vectors: [`corpus/wire-format/framing/`](https://github.com/swaits/meshcore-spec/tree/main/versions/v0.1.0/corpus/wire-format/framing/), [`corpus/wire-format/invalid/`](https://github.com/swaits/meshcore-spec/tree/main/versions/v0.1.0/corpus/wire-format/invalid/)
 
 ### Reference Implementation
 

@@ -1,0 +1,128 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Advertisement App Data - Combined Optional Fields",
+  "spec_ref": "versions/v0.1.0/05-payload-advert.md",
+  "protocol_version": 0,
+  "description": "Tests app_data with multiple optional fields present simultaneously. Fields appear in order: flags, location (lat+lon), feat1, feat2, name.",
+  "vectors": [
+    {
+      "id": "adc-001",
+      "description": "Chat node with location + feat1 + name",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "pub_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "timestamp": 0,
+          "signature": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+          "app_data": {
+            "flags": 177,
+            "latitude": 37774900,
+            "longitude": -122419400,
+            "feat1": 256,
+            "name": "Node1"
+          }
+        }
+      },
+      "binary": "11 00 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 00000000 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB B1 34664002 3807B4F8 0001 4E6F646531",
+      "notes": "flags=0xB1=10110001: type=Chat(1), has_location(bit4), has_feat1(bit5), has_name(bit7). No feat2 (bit6=0). feat1=256=0x0100 LE=0001. Name 'Node1' = 4E6F646531."
+    },
+    {
+      "id": "adc-002",
+      "description": "Repeater with all optional fields",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "pub_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "timestamp": 0,
+          "signature": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+          "app_data": {
+            "flags": 242,
+            "latitude": 0,
+            "longitude": 0,
+            "feat1": 1,
+            "feat2": 2,
+            "name": "RPT"
+          }
+        }
+      },
+      "binary": "11 00 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 00000000 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB F2 00000000 00000000 0100 0200 525054",
+      "notes": "flags=0xF2=11110010: type=Repeater(2), all optional fields present. feat1=1 LE=0100, feat2=2 LE=0200, name='RPT'=525054."
+    },
+    {
+      "id": "adc-003",
+      "description": "Node with name only (no location or features)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "pub_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "timestamp": 0,
+          "signature": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+          "app_data": {
+            "flags": 129,
+            "name": "Hi"
+          }
+        }
+      },
+      "binary": "11 00 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 00000000 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 81 4869",
+      "notes": "flags=0x81=10000001: type=Chat(1), has_name(bit7) only. name='Hi'=4869."
+    },
+    {
+      "id": "adc-004",
+      "description": "Node with feat2 only (no location, feat1, or name)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "pub_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "timestamp": 0,
+          "signature": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+          "app_data": {
+            "flags": 65,
+            "feat2": 65535
+          }
+        }
+      },
+      "binary": "11 00 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 00000000 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 41 FFFF",
+      "notes": "flags=0x41=01000001: type=Chat(1), has_feat2(bit6). feat2=65535=0xFFFF."
+    }
+  ]
+}

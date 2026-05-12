@@ -1,0 +1,129 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Encrypted Payload - Basic",
+  "spec_ref": "versions/v0.1.0/06-payload-encrypted.md",
+  "protocol_version": 0,
+  "description": "Tests encrypted payload encoding (REQ/RESPONSE/TXT_MSG) with known cryptographic material. Uses shared_secret = 0x000102...1F, AES key = first 16 bytes, HMAC key = full 32 bytes.",
+  "vectors": [
+    {
+      "id": "enc-001",
+      "description": "Encrypted TXT_MSG with 5-byte plaintext 'Hello'",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "txt_msg",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "EAB5",
+          "ciphertext": "D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "09 00 ABCD EAB5 D9FD218D50A4409143A7243D6D913502",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "48656C6C6F"
+      },
+      "notes": "plaintext 'Hello' = 48656C6C6F (5 bytes), zero-padded to 16 for AES-128-ECB. MAC is HMAC-SHA256(shared_secret, ciphertext) truncated to 2 bytes."
+    },
+    {
+      "id": "enc-002",
+      "description": "Encrypted REQUEST with 16-byte plaintext (exact AES block)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "request",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "631C",
+          "ciphertext": "0A940BB5416EF045F1C39458C653EA5A"
+        }
+      },
+      "binary": "01 00 ABCD 631C 0A940BB5416EF045F1C39458C653EA5A",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "000102030405060708090A0B0C0D0E0F"
+      },
+      "notes": "16-byte plaintext fills exactly one AES block. No padding needed."
+    },
+    {
+      "id": "enc-003",
+      "description": "Encrypted RESPONSE with 17-byte plaintext (spans 2 AES blocks)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "response",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "9822",
+          "ciphertext": "0A940BB5416EF045F1C39458C653EA5A299F7C29A3E13AE7F64ECBA062FC7560"
+        }
+      },
+      "binary": "05 00 ABCD 9822 0A940BB5416EF045F1C39458C653EA5A299F7C29A3E13AE7F64ECBA062FC7560",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "000102030405060708090A0B0C0D0E0F10"
+      },
+      "notes": "17-byte plaintext: first 16 bytes in block 1, byte 17 zero-padded in block 2. 32 bytes ciphertext total."
+    },
+    {
+      "id": "enc-004",
+      "description": "Encrypted TXT_MSG with 1-byte plaintext",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "txt_msg",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "83FB",
+          "ciphertext": "2D4135E80761429386BFE3833C535AA8"
+        }
+      },
+      "binary": "09 00 ABCD 83FB 2D4135E80761429386BFE3833C535AA8",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "42"
+      },
+      "notes": "1-byte plaintext 0x42, zero-padded to 16 bytes."
+    }
+  ]
+}

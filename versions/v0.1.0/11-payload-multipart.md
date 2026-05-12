@@ -112,7 +112,7 @@ intends to emit, not a guarantee that they will arrive.
 ### Cross-References
 
 - [Section 4: ACK](04-payload-ack.md) — ACK CRC format
-- Test vectors: [`corpus/payloads/multipart/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/payloads/multipart/)
+- Test vectors: [`corpus/payloads/multipart/`](https://github.com/swaits/meshcore-spec/tree/main/versions/v0.1.0/corpus/payloads/multipart/)
 
 ### Reference Implementation
 

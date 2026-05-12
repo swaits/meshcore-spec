@@ -1,0 +1,99 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Encrypted Payload - AES Block Padding",
+  "spec_ref": "versions/v0.1.0/06-payload-encrypted.md",
+  "protocol_version": 0,
+  "description": "Tests AES-128-ECB zero-padding behavior at block boundaries. Plaintexts of 1, 15, 16, 17, and 32 bytes exercise all padding edge cases.",
+  "vectors": [
+    {
+      "id": "pad-001",
+      "description": "1-byte plaintext: padded with 15 zero bytes",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "txt_msg",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "83FB",
+          "ciphertext": "2D4135E80761429386BFE3833C535AA8"
+        }
+      },
+      "binary": "09 00 ABCD 83FB 2D4135E80761429386BFE3833C535AA8",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "42"
+      },
+      "notes": "1 byte padded to 16: 42 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00. 1 AES block output."
+    },
+    {
+      "id": "pad-002",
+      "description": "16-byte plaintext: no padding needed (exact block boundary)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "txt_msg",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "631C",
+          "ciphertext": "0A940BB5416EF045F1C39458C653EA5A"
+        }
+      },
+      "binary": "09 00 ABCD 631C 0A940BB5416EF045F1C39458C653EA5A",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "000102030405060708090A0B0C0D0E0F"
+      },
+      "notes": "Exactly 16 bytes: no padding. 1 AES block output."
+    },
+    {
+      "id": "pad-003",
+      "description": "17-byte plaintext: 1 byte in second block, padded with 15 zeros",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "txt_msg",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "9822",
+          "ciphertext": "0A940BB5416EF045F1C39458C653EA5A299F7C29A3E13AE7F64ECBA062FC7560"
+        }
+      },
+      "binary": "09 00 ABCD 9822 0A940BB5416EF045F1C39458C653EA5A299F7C29A3E13AE7F64ECBA062FC7560",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "000102030405060708090A0B0C0D0E0F10"
+      },
+      "notes": "17 bytes spans 2 blocks. Block 2 = 10 00 00 ... 00. 32 bytes ciphertext."
+    }
+  ]
+}

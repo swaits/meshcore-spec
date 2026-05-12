@@ -1,0 +1,115 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "ACK Payload - Boundary Values",
+  "spec_ref": "versions/v0.1.0/04-payload-ack.md",
+  "protocol_version": 0,
+  "description": "ACK CRC boundary value tests including all-zeros, all-ones, and single-bit patterns.",
+  "vectors": [
+    {
+      "id": "ack-bnd-001",
+      "description": "ACK CRC all zeros",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000000"
+        }
+      },
+      "binary": "0D 00 00000000"
+    },
+    {
+      "id": "ack-bnd-002",
+      "description": "ACK CRC all ones",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "FFFFFFFF"
+        }
+      },
+      "binary": "0D 00 FFFFFFFF"
+    },
+    {
+      "id": "ack-bnd-003",
+      "description": "ACK CRC 0x80000000 (high bit set)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "80000000"
+        }
+      },
+      "binary": "0D 00 00000080"
+    },
+    {
+      "id": "ack-bnd-004",
+      "description": "ACK CRC 0x00000080 (byte boundary)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000080"
+        }
+      },
+      "binary": "0D 00 80000000"
+    },
+    {
+      "id": "ack-bnd-005",
+      "description": "ACK CRC 0x01000000",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "01000000"
+        }
+      },
+      "binary": "0D 00 00000001",
+      "notes": "Tests that 0x01000000 LE = 00 00 00 01, not confused with 0x00000001."
+    }
+  ]
+}

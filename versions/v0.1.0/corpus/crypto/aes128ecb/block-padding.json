@@ -1,0 +1,113 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "AES-128-ECB Block Padding",
+  "spec_ref": "versions/v0.1.0/14-crypto.md",
+  "protocol_version": 0,
+  "description": "Tests AES-128-ECB zero-padding for partial blocks. MeshCore pads the final block with zeros before encryption.",
+  "vectors": [
+    {
+      "id": "aes-pad-001",
+      "description": "5-byte plaintext 'Hello' padded to 16 bytes with zeros",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "D9FD218D50A4409143A7243D6D913502"
+        }
+      },
+      "binary": "3D 00 D9FD218D50A4409143A7243D6D913502",
+      "crypto_context": {
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "48656C6C6F"
+      },
+      "notes": "Padded input: 48656C6C6F 0000000000000000000000. Output: 1 block."
+    },
+    {
+      "id": "aes-pad-002",
+      "description": "15-byte plaintext padded with 1 zero byte",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "BF70C038D511F2A8B528E06691C6D42D"
+        }
+      },
+      "binary": "3D 00 BF70C038D511F2A8B528E06691C6D42D",
+      "crypto_context": {
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "000102030405060708090A0B0C0D0E"
+      },
+      "notes": "15 bytes padded with 1 zero: 000102...0E00. Output: 1 block."
+    },
+    {
+      "id": "aes-pad-003",
+      "description": "16-byte plaintext: no padding needed",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "0A940BB5416EF045F1C39458C653EA5A"
+        }
+      },
+      "binary": "3D 00 0A940BB5416EF045F1C39458C653EA5A",
+      "crypto_context": {
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "000102030405060708090A0B0C0D0E0F"
+      },
+      "notes": "Exact block boundary: no padding. Output: 1 block."
+    },
+    {
+      "id": "aes-pad-004",
+      "description": "17-byte plaintext: 2 blocks, second padded with 15 zeros",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "0A940BB5416EF045F1C39458C653EA5A299F7C29A3E13AE7F64ECBA062FC7560"
+        }
+      },
+      "binary": "3D 00 0A940BB5416EF045F1C39458C653EA5A299F7C29A3E13AE7F64ECBA062FC7560",
+      "crypto_context": {
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "000102030405060708090A0B0C0D0E0F10"
+      },
+      "notes": "Block 1: 000102...0F (no pad). Block 2: 10 + 15 zeros. Output: 2 blocks = 32 bytes."
+    }
+  ]
+}

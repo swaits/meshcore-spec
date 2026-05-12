@@ -1,0 +1,188 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Path - Hash Sizes",
+  "spec_ref": "versions/v0.1.0/03-path.md",
+  "protocol_version": 0,
+  "description": "Tests all valid hash sizes (1, 2, 3 bytes) in the path length encoding. These vectors are critical for catching implementations that treat path_len as a raw byte count.",
+  "vectors": [
+    {
+      "id": "hs-001",
+      "description": "Hash size 1 (code 0), 1 hop",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 1,
+          "hashes": [
+            "AA"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 01 AA 01000000",
+      "notes": "path_len=0x01: bits 6-7=00 (size code 0, hash_size=1), bits 0-5=1 (count=1). Path: 1 byte."
+    },
+    {
+      "id": "hs-002",
+      "description": "Hash size 1 (code 0), 5 hops",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 5,
+          "hashes": [
+            "AA",
+            "BB",
+            "CC",
+            "DD",
+            "EE"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 05 AABBCCDDEE 01000000",
+      "notes": "path_len=0x05: hash_size=1, count=5. Path: 5 bytes."
+    },
+    {
+      "id": "hs-010",
+      "description": "Hash size 2 (code 1), 1 hop",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 2,
+          "hash_count": 1,
+          "hashes": [
+            "AABB"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 41 AABB 01000000",
+      "notes": "path_len=0x41: bits 6-7=01 (size code 1, hash_size=2), bits 0-5=1 (count=1). Path: 2 bytes. An implementation treating 0x41=65 as raw byte count would fail."
+    },
+    {
+      "id": "hs-011",
+      "description": "Hash size 2 (code 1), 2 hops",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 2,
+          "hash_count": 2,
+          "hashes": [
+            "AABB",
+            "CCDD"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 42 AABBCCDD 01000000",
+      "notes": "path_len=0x42: hash_size=2, count=2. Path: 4 bytes. This is the example that catches the meshcore-rs bug (0x42=66 raw vs 4 actual bytes)."
+    },
+    {
+      "id": "hs-012",
+      "description": "Hash size 2 (code 1), 5 hops",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 2,
+          "hash_count": 5,
+          "hashes": [
+            "1122",
+            "3344",
+            "5566",
+            "7788",
+            "99AA"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 45 112233445566778899AA 01000000",
+      "notes": "path_len=0x45: hash_size=2, count=5. Path: 10 bytes."
+    },
+    {
+      "id": "hs-020",
+      "description": "Hash size 3 (code 2), 1 hop",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 3,
+          "hash_count": 1,
+          "hashes": [
+            "AABBCC"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 81 AABBCC 01000000",
+      "notes": "path_len=0x81: bits 6-7=10 (size code 2, hash_size=3), bits 0-5=1. Path: 3 bytes."
+    },
+    {
+      "id": "hs-021",
+      "description": "Hash size 3 (code 2), 3 hops",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 3,
+          "hash_count": 3,
+          "hashes": [
+            "AABBCC",
+            "DDEEFF",
+            "112233"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 83 AABBCC DDEEFF 112233 01000000",
+      "notes": "path_len=0x83: hash_size=3, count=3. Path: 9 bytes."
+    }
+  ]
+}

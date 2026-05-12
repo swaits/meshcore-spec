@@ -65,7 +65,12 @@ cut-version VERSION:
         exit 1
     fi
     mkdir -p versions
+    # Snapshot both the spec text AND its paired test corpus, so the
+    # release is a self-contained pair. The site infrastructure
+    # (book.toml, theme, scripts, tools) stays unversioned at the
+    # repo root and applies to every build.
     cp -R src "versions/{{VERSION}}"
+    cp -R corpus "versions/{{VERSION}}/corpus"
     # Freeze the version marker in the snapshot. src/ keeps the literal
     # `latest (main)` so the rolling /latest/ build stays accurate.
     sed -i 's|`latest (main)`|`{{VERSION}}`|' "versions/{{VERSION}}/00-overview.md"
@@ -74,16 +79,23 @@ cut-version VERSION:
         echo "snapshot still says 'latest (main)'. Check that src/00-overview.md" >&2
         echo "contains the marker line ('**Spec version:** \`latest (main)\`')." >&2
     fi
-    # Repoint corpus links to this version's GitHub tree. The spec keeps
-    # CHANGELOG links pointing at main (more useful — full history) by
-    # only matching .../tree/main/corpus and .../blob/main/corpus.
-    find "versions/{{VERSION}}" -name '*.md' -exec sed -i \
-        -e 's|/tree/main/corpus|/tree/{{VERSION}}/corpus|g' \
-        -e 's|/blob/main/corpus|/blob/{{VERSION}}/corpus|g' \
+    # Repoint corpus URLs in the snapshot's spec text from main/corpus
+    # to main/versions/<v>/corpus — the frozen copy lives in the repo
+    # at a stable path on main, so the GitHub links resolve without
+    # needing a git tag. -maxdepth 1 keeps the substitution off the
+    # corpus *.json files (they get their own pass below).
+    find "versions/{{VERSION}}" -maxdepth 1 -name '*.md' -exec sed -i \
+        -e 's|/tree/main/corpus|/tree/main/versions/{{VERSION}}/corpus|g' \
+        -e 's|/blob/main/corpus|/blob/main/versions/{{VERSION}}/corpus|g' \
         {} +
-    echo "Snapshotted src/ -> versions/{{VERSION}}"
+    # Repoint spec_ref inside the frozen corpus to this version's
+    # frozen spec, so a reader following a test vector lands on the
+    # spec text the vector was paired with at release time.
+    find "versions/{{VERSION}}/corpus" -name '*.json' -exec sed -i \
+        's|"spec_ref": "src/|"spec_ref": "versions/{{VERSION}}/|g' \
+        {} +
+    echo "Snapshotted: src/ + corpus/ -> versions/{{VERSION}}/"
     echo
     echo "Next steps:"
     echo "  - git add versions/{{VERSION}} && commit (e.g. \"release {{VERSION}}\")"
-    echo "  - git tag {{VERSION}}  # REQUIRED so the corpus links in /{{VERSION}}/"
-    echo "                        # resolve on GitHub (they point at tree/{{VERSION}}/...)"
+    echo "  - optionally tag the commit: git tag {{VERSION}}"

@@ -1,0 +1,85 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Anonymous Request Payload",
+  "spec_ref": "versions/v0.1.0/07-payload-anon-req.md",
+  "protocol_version": 0,
+  "description": "Tests anonymous request payload: dest_hash(1) + sender_pub_key(32) + cipher_mac(2) + ciphertext.",
+  "vectors": [
+    {
+      "id": "anon-001",
+      "description": "Anonymous request with known keys",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "anon_req",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "sender_pub_key": "404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F",
+          "cipher_mac": "F4B4",
+          "ciphertext": "908A4FC137435774D0BB603F55A06069"
+        }
+      },
+      "binary": "1D 00 AB 404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F F4B4 908A4FC137435774D0BB603F55A06069",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "416E6F6E526571"
+      },
+      "notes": "Header 0x1D = ANON_REQ(7)+FLOOD(1). Payload: dest_hash(1) + pub_key(32) + mac(2) + ct(16) = 51 bytes. Plaintext 'AnonReq' (7 bytes)."
+    },
+    {
+      "id": "anon-002",
+      "description": "Anonymous request with tampered MAC",
+      "type": "invalid",
+      "binary": "1D 00 AB 404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F 0000 908A4FC137435774D0BB603F55A06069",
+      "expected_error": "mac_invalid",
+      "notes": "MAC zeroed. Verification must fail."
+    },
+    {
+      "id": "anon-003",
+      "description": "Anonymous request via DIRECT routing with 2-hop path",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "anon_req",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 2,
+          "hashes": ["AA", "BB"]
+        },
+        "payload": {
+          "dest_hash": "CC",
+          "sender_pub_key": "404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F",
+          "cipher_mac": "F4B4",
+          "ciphertext": "908A4FC137435774D0BB603F55A06069"
+        }
+      },
+      "binary": "1E 02 AABB CC 404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F F4B4 908A4FC137435774D0BB603F55A06069",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "encryption_key": "000102030405060708090A0B0C0D0E0F",
+        "plaintext": "416E6F6E526571"
+      },
+      "notes": "Header 0x1E = ANON_REQ(7)+DIRECT(2). Direct-routed anonymous request with 2 path hashes."
+    },
+    {
+      "id": "anon-004",
+      "description": "Anonymous request truncated before ciphertext",
+      "type": "invalid",
+      "binary": "1D 00 AB 404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F F4B4",
+      "expected_error": "too_short",
+      "notes": "Payload is only 35 bytes (dest_hash + pub_key + mac). Missing ciphertext. Minimum is 51 bytes."
+    }
+  ]
+}

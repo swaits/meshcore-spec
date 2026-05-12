@@ -1,0 +1,308 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Header - Payload Types",
+  "spec_ref": "versions/v0.1.0/02-header.md",
+  "protocol_version": 0,
+  "description": "Tests encoding of all defined payload types in the header byte. Uses FLOOD routing and minimal payloads to isolate header encoding.",
+  "vectors": [
+    {
+      "id": "pt-000",
+      "description": "Payload type REQUEST (0x00) - header byte encodes type in bits 2-5",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "request",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "1122",
+          "ciphertext": "DEADBEEFCAFEBABE0102030405060708"
+        }
+      },
+      "binary": "01 00 ABCD 1122 DEADBEEFCAFEBABE0102030405060708",
+      "notes": "Header: (0<<6)|(0<<2)|1 = 0x01. Payload: dest_hash(1) + src_hash(1) + MAC(2) + 16 bytes ciphertext."
+    },
+    {
+      "id": "pt-001",
+      "description": "Payload type RESPONSE (0x01)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "response",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "1122",
+          "ciphertext": "DEADBEEFCAFEBABE0102030405060708"
+        }
+      },
+      "binary": "05 00 ABCD 1122 DEADBEEFCAFEBABE0102030405060708",
+      "notes": "Header: (0<<6)|(1<<2)|1 = 0x05."
+    },
+    {
+      "id": "pt-002",
+      "description": "Payload type TXT_MSG (0x02)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "txt_msg",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "AB",
+          "src_hash": "CD",
+          "cipher_mac": "1122",
+          "ciphertext": "DEADBEEFCAFEBABE0102030405060708"
+        }
+      },
+      "binary": "09 00 ABCD 1122 DEADBEEFCAFEBABE0102030405060708",
+      "notes": "Header: (0<<6)|(2<<2)|1 = 0x09."
+    },
+    {
+      "id": "pt-003",
+      "description": "Payload type ACK (0x03)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "DEADBEEF"
+        }
+      },
+      "binary": "0D 00 EFBEADDE",
+      "notes": "Header: (0<<6)|(3<<2)|1 = 0x0D. CRC 0xDEADBEEF as LE = EFBEADDE."
+    },
+    {
+      "id": "pt-004",
+      "description": "Payload type ADVERT (0x04) - minimal advert with 1 byte payload",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "11 00 FF",
+      "notes": "Header: (0<<6)|(4<<2)|1 = 0x11. Using raw payload to test header encoding in isolation."
+    },
+    {
+      "id": "pt-005",
+      "description": "Payload type GRP_TXT (0x05)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "grp_txt",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "channel_hash": "AB",
+          "cipher_mac": "1122",
+          "ciphertext": "DEADBEEFCAFEBABE0102030405060708"
+        }
+      },
+      "binary": "15 00 AB 1122 DEADBEEFCAFEBABE0102030405060708",
+      "notes": "Header: (0<<6)|(5<<2)|1 = 0x15."
+    },
+    {
+      "id": "pt-006",
+      "description": "Payload type GRP_DATA (0x06)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "grp_data",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "channel_hash": "AB",
+          "cipher_mac": "1122",
+          "ciphertext": "DEADBEEFCAFEBABE0102030405060708"
+        }
+      },
+      "binary": "19 00 AB 1122 DEADBEEFCAFEBABE0102030405060708",
+      "notes": "Header: (0<<6)|(6<<2)|1 = 0x19."
+    },
+    {
+      "id": "pt-007",
+      "description": "Payload type ANON_REQ (0x07)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "anon_req",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "1D 00 FF",
+      "notes": "Header: (0<<6)|(7<<2)|1 = 0x1D. Minimal payload to test header."
+    },
+    {
+      "id": "pt-008",
+      "description": "Payload type PATH (0x08)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "path",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "21 00 FF",
+      "notes": "Header: (0<<6)|(8<<2)|1 = 0x21."
+    },
+    {
+      "id": "pt-009",
+      "description": "Payload type TRACE (0x09)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "trace",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "25 00 FF",
+      "notes": "Header: (0<<6)|(9<<2)|1 = 0x25."
+    },
+    {
+      "id": "pt-010",
+      "description": "Payload type MULTIPART (0x0A)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "multipart",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "29 00 FF",
+      "notes": "Header: (0<<6)|(10<<2)|1 = 0x29."
+    },
+    {
+      "id": "pt-011",
+      "description": "Payload type CONTROL (0x0B)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "control",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "2D 00 FF",
+      "notes": "Header: (0<<6)|(11<<2)|1 = 0x2D."
+    },
+    {
+      "id": "pt-012",
+      "description": "Payload type RAW_CUSTOM (0x0F)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "CAFEBABE"
+        }
+      },
+      "binary": "3D 00 CAFEBABE",
+      "notes": "Header: (0<<6)|(15<<2)|1 = 0x3D."
+    }
+  ]
+}

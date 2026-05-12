@@ -1,0 +1,53 @@
+{
+  "$schema": "../schema/test-vector.schema.json",
+  "name": "Companion Protocol - Responses",
+  "spec_ref": "versions/v0.1.0/18-companion-protocol.md",
+  "protocol_version": 0,
+  "description": "Tests companion protocol response type encoding.",
+  "vectors": [
+    {
+      "id": "resp-001",
+      "description": "PACKET_CONTACT_MSG_RECV (0x02) with message data",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "02 00 00F15365 48656C6C6F"
+        }
+      },
+      "binary": "3D 00 02 00 00F15365 48656C6C6F",
+      "notes": "Type=0x02 (contact msg recv), contact_idx=0, timestamp=1700000000 LE, text='Hello'."
+    },
+    {
+      "id": "resp-002",
+      "description": "PACKET_ADV_RECV (0x03) with advert data",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "03 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 01"
+        }
+      },
+      "binary": "3D 00 03 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 01",
+      "notes": "Type=0x03 (advert recv). pub_key=AA×32, flags=0x01 (Chat)."
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "../schema/test-vector.schema.json",
+  "name": "Companion Protocol - Commands",
+  "spec_ref": "versions/v0.1.0/18-companion-protocol.md",
+  "protocol_version": 0,
+  "description": "Tests companion protocol command type encoding for various command types.",
+  "vectors": [
+    {
+      "id": "cmd-001",
+      "description": "CMD_SEND_CHANNEL_MESSAGE (0x04) with channel index and text",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "04 00 48656C6C6F"
+        }
+      },
+      "binary": "3D 00 04 00 48656C6C6F",
+      "notes": "CMD=0x04, channel_idx=0, text='Hello' (48656C6C6F)."
+    },
+    {
+      "id": "cmd-002",
+      "description": "CMD_GET_CONTACTS (0x06)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "06"
+        }
+      },
+      "binary": "3D 00 06"
+    },
+    {
+      "id": "cmd-003",
+      "description": "CMD_GET_CHANNELS (0x07)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "07"
+        }
+      },
+      "binary": "3D 00 07"
+    },
+    {
+      "id": "cmd-004",
+      "description": "CMD_REBOOT (0x12)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "12"
+        }
+      },
+      "binary": "3D 00 12"
+    }
+  ]
+}

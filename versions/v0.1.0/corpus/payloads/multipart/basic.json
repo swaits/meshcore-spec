@@ -1,0 +1,108 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Multipart Payload - Basic",
+  "spec_ref": "versions/v0.1.0/11-payload-multipart.md",
+  "protocol_version": 0,
+  "description": "Tests multipart payload encoding: first byte = (remaining << 4) | sub_type. Currently only multipart ACK (sub_type=3) is defined.",
+  "vectors": [
+    {
+      "id": "mp-001",
+      "description": "Multipart ACK with remaining=1, CRC 0xDEADBEEF",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "multipart",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "remaining": 1,
+          "sub_type": 3,
+          "sub_payload": "EFBEADDE"
+        }
+      },
+      "binary": "29 00 13 EFBEADDE",
+      "notes": "First byte: (1<<4)|3 = 0x13. Sub-payload: ACK CRC 0xDEADBEEF as LE."
+    },
+    {
+      "id": "mp-002",
+      "description": "Multipart ACK with remaining=0 (last in sequence)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "multipart",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "remaining": 0,
+          "sub_type": 3,
+          "sub_payload": "01000000"
+        }
+      },
+      "binary": "29 00 03 01000000",
+      "notes": "First byte: (0<<4)|3 = 0x03."
+    },
+    {
+      "id": "mp-003",
+      "description": "Multipart ACK with remaining=15 (maximum)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "multipart",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "remaining": 15,
+          "sub_type": 3,
+          "sub_payload": "FFFFFFFF"
+        }
+      },
+      "binary": "29 00 F3 FFFFFFFF",
+      "notes": "First byte: (15<<4)|3 = 0xF3."
+    },
+    {
+      "id": "mp-004",
+      "description": "Multipart ACK via direct routing",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "multipart",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 2,
+          "hashes": [
+            "AA",
+            "BB"
+          ]
+        },
+        "payload": {
+          "remaining": 2,
+          "sub_type": 3,
+          "sub_payload": "78563412"
+        }
+      },
+      "binary": "2A 02 AABB 23 78563412",
+      "notes": "Header 0x2A = MULTIPART(10)+DIRECT(2). First byte: (2<<4)|3 = 0x23."
+    }
+  ]
+}

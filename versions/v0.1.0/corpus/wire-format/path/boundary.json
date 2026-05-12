@@ -1,0 +1,156 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Path - Boundary Conditions",
+  "spec_ref": "versions/v0.1.0/03-path.md",
+  "protocol_version": 0,
+  "description": "Tests boundary conditions for path encoding including maximum valid values and values just below overflow thresholds.",
+  "vectors": [
+    {
+      "id": "pb-001",
+      "description": "hash_size=2, count=31 (62 bytes, 2 below max)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 2,
+          "hash_count": 31,
+          "hashes": [
+            "0001",
+            "0203",
+            "0405",
+            "0607",
+            "0809",
+            "0A0B",
+            "0C0D",
+            "0E0F",
+            "1011",
+            "1213",
+            "1415",
+            "1617",
+            "1819",
+            "1A1B",
+            "1C1D",
+            "1E1F",
+            "2021",
+            "2223",
+            "2425",
+            "2627",
+            "2829",
+            "2A2B",
+            "2C2D",
+            "2E2F",
+            "3031",
+            "3233",
+            "3435",
+            "3637",
+            "3839",
+            "3A3B",
+            "3C3D"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 5F 000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D 01000000",
+      "notes": "path_len=0x5F: hash_size=2, count=31. Path: 62 bytes. Just below max."
+    },
+    {
+      "id": "pb-002",
+      "description": "hash_size=3, count=20 (60 bytes, 3 below max for this hash_size)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 3,
+          "hash_count": 20,
+          "hashes": [
+            "000102",
+            "030405",
+            "060708",
+            "090A0B",
+            "0C0D0E",
+            "0F1011",
+            "121314",
+            "151617",
+            "18191A",
+            "1B1C1D",
+            "1E1F20",
+            "212223",
+            "242526",
+            "272829",
+            "2A2B2C",
+            "2D2E2F",
+            "303132",
+            "333435",
+            "363738",
+            "393A3B"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 94 000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F30313233343536373839 3A3B 01000000",
+      "notes": "path_len=0x94: hash_size=3, count=20. Path: 60 bytes."
+    },
+    {
+      "id": "pb-003",
+      "description": "Single-byte path: hash_size=1, count=1",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 1,
+          "hashes": [
+            "00"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 01 00 01000000",
+      "notes": "Minimal non-empty path. Hash value 0x00 is valid."
+    },
+    {
+      "id": "pb-004",
+      "description": "Path with all-FF hashes",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 3,
+          "hashes": [
+            "FF",
+            "FF",
+            "FF"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 03 FFFFFF 01000000",
+      "notes": "All hashes are 0xFF. Valid encoding."
+    }
+  ]
+}

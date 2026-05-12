@@ -1,0 +1,84 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "SHA-256 Basic",
+  "spec_ref": "versions/v0.1.0/14-crypto.md",
+  "protocol_version": 0,
+  "description": "Basic SHA-256 hash computation test vectors. MeshCore uses SHA-256 for packet hashing, channel hash derivation, and HMAC.",
+  "vectors": [
+    {
+      "id": "sha-001",
+      "description": "SHA-256 of empty string",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        }
+      },
+      "binary": "3D 00 E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "crypto_context": {
+        "plaintext": ""
+      },
+      "notes": "SHA-256('') = E3B0C442...B855. Standard NIST test vector."
+    },
+    {
+      "id": "sha-002",
+      "description": "SHA-256 of 'abc'",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD"
+        }
+      },
+      "binary": "3D 00 BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD",
+      "crypto_context": {
+        "plaintext": "616263"
+      },
+      "notes": "SHA-256('abc') = BA7816BF...15AD. Standard NIST test vector."
+    },
+    {
+      "id": "sha-003",
+      "description": "SHA-256 of 'MeshCore'",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "F4F17278283E082A4743CCA308285D601E0F9943E6D6F9271B5B8C7DFED09DC0"
+        }
+      },
+      "binary": "3D 00 F4F17278283E082A4743CCA308285D601E0F9943E6D6F9271B5B8C7DFED09DC0",
+      "crypto_context": {
+        "plaintext": "4D657368436F7265"
+      },
+      "notes": "SHA-256('MeshCore')."
+    }
+  ]
+}

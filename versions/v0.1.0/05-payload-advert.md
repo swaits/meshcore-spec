@@ -115,7 +115,7 @@ preceding optional fields are present.
 
 - [Section 15: Identity](15-identity.md) — Ed25519 key management
 - [Section 14: Cryptography](14-crypto.md) — Signature operations
-- Test vectors: [`corpus/payloads/advert/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/payloads/advert/)
+- Test vectors: [`corpus/payloads/advert/`](https://github.com/swaits/meshcore-spec/tree/main/versions/v0.1.0/corpus/payloads/advert/)
 
 ### Reference Implementation
 

@@ -1,0 +1,122 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "ACK Payload - Basic",
+  "spec_ref": "versions/v0.1.0/04-payload-ack.md",
+  "protocol_version": 0,
+  "description": "Basic ACK payload encoding/decoding tests with various CRC values.",
+  "vectors": [
+    {
+      "id": "ack-001",
+      "description": "ACK with CRC 0xDEADBEEF",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "DEADBEEF"
+        }
+      },
+      "binary": "0D 00 EFBEADDE",
+      "notes": "CRC 0xDEADBEEF stored as little-endian: EF BE AD DE."
+    },
+    {
+      "id": "ack-002",
+      "description": "ACK with CRC 0x00000001",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000001"
+        }
+      },
+      "binary": "0D 00 01000000"
+    },
+    {
+      "id": "ack-003",
+      "description": "ACK with CRC 0x12345678",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "12345678"
+        }
+      },
+      "binary": "0D 00 78563412"
+    },
+    {
+      "id": "ack-004",
+      "description": "ACK via direct routing with path",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 2,
+          "hashes": [
+            "AA",
+            "BB"
+          ]
+        },
+        "payload": {
+          "ack_crc": "CAFEBABE"
+        }
+      },
+      "binary": "0E 02 AABB BEBAFECA",
+      "notes": "Direct routed ACK. CRC 0xCAFEBABE as LE = BEBAFECA."
+    },
+    {
+      "id": "ack-005",
+      "description": "ACK with 2-byte hash path",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 2,
+          "hash_count": 1,
+          "hashes": [
+            "AABB"
+          ]
+        },
+        "payload": {
+          "ack_crc": "00000000"
+        }
+      },
+      "binary": "0E 41 AABB 00000000",
+      "notes": "path_len=0x41: hash_size=2, count=1."
+    }
+  ]
+}

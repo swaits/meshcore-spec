@@ -1,0 +1,97 @@
+{
+  "$schema": "../schema/test-vector.schema.json",
+  "name": "KISS Protocol - Standard Commands",
+  "spec_ref": "versions/v0.1.0/19-kiss-protocol.md",
+  "protocol_version": 0,
+  "description": "Tests standard KISS commands (TXDELAY, Persistence, SlotTime, etc.).",
+  "vectors": [
+    {
+      "id": "kiss-std-001",
+      "description": "TXDELAY command: 500ms (50 × 10ms)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 01 32 C0"
+        }
+      },
+      "binary": "3D 00 C0 01 32 C0",
+      "notes": "Type=0x01 (TXDELAY), data=0x32 (50 decimal = 500ms)."
+    },
+    {
+      "id": "kiss-std-002",
+      "description": "Persistence command: P=63",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 02 3F C0"
+        }
+      },
+      "binary": "3D 00 C0 02 3F C0",
+      "notes": "Type=0x02 (Persistence), data=0x3F (63)."
+    },
+    {
+      "id": "kiss-std-003",
+      "description": "SlotTime command: 100ms (10 × 10ms)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 03 0A C0"
+        }
+      },
+      "binary": "3D 00 C0 03 0A C0",
+      "notes": "Type=0x03 (SlotTime), data=0x0A (10 = 100ms)."
+    },
+    {
+      "id": "kiss-std-004",
+      "description": "FullDuplex command: half duplex (0)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C0 05 00 C0"
+        }
+      },
+      "binary": "3D 00 C0 05 00 C0",
+      "notes": "Type=0x05 (FullDuplex), data=0x00 (half duplex)."
+    }
+  ]
+}

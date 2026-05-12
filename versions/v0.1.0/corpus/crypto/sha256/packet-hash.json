@@ -1,0 +1,109 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "SHA-256 Packet Hash",
+  "spec_ref": "versions/v0.1.0/16-packet-hash.md",
+  "protocol_version": 0,
+  "description": "Tests MeshCore packet hash computation: SHA-256(payload_type || payload)[0..7]. TRACE packets additionally include path_len in the hash input.",
+  "vectors": [
+    {
+      "id": "phash-001",
+      "description": "Packet hash for ACK with CRC 0xDEADBEEF",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "1BEE08540E8F7E5B"
+        }
+      },
+      "binary": "3D 00 1BEE08540E8F7E5B",
+      "crypto_context": {
+        "plaintext": "03 EFBEADDE"
+      },
+      "notes": "SHA-256(0x03 || EFBEADDE)[0..7] = 1BEE08540E8F7E5B. Input: type byte 0x03 (ACK) + CRC 0xDEADBEEF as LE."
+    },
+    {
+      "id": "phash-002",
+      "description": "Packet hash for TRACE (path_len=0): includes path_len in hash",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C105C34E45E60009"
+        }
+      },
+      "binary": "3D 00 C105C34E45E60009",
+      "crypto_context": {
+        "plaintext": "09 00 01000000 02000000 00"
+      },
+      "notes": "SHA-256(0x09 || 0x00 || tag=1_LE || auth=2_LE || flags=0)[0..7]. TRACE special case: path_len byte (0x00) included after type byte."
+    },
+    {
+      "id": "phash-003",
+      "description": "Packet hash for TRACE (path_len=3): different hash due to path_len",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "B83FB2E0EE276404"
+        }
+      },
+      "binary": "3D 00 B83FB2E0EE276404",
+      "crypto_context": {
+        "plaintext": "09 03 01000000 02000000 00"
+      },
+      "notes": "Same TRACE payload but path_len=3 instead of 0. Different hash proves path_len is included in computation."
+    },
+    {
+      "id": "phash-004",
+      "description": "Packet hash for ADVERT (all-AA pubkey, ts=0, all-BB sig)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "F73157720FB1B5E1"
+        }
+      },
+      "binary": "3D 00 F73157720FB1B5E1",
+      "crypto_context": {
+        "plaintext": "04 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 00000000 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+      },
+      "notes": "SHA-256(0x04 || advert_payload)[0..7]. Type 0x04 = ADVERT. Not a TRACE, so path_len is NOT included."
+    }
+  ]
+}

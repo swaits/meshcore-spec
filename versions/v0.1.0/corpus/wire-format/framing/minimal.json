@@ -1,0 +1,127 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Framing - Minimal Valid Packets",
+  "spec_ref": "versions/v0.1.0/01-wire-format.md",
+  "protocol_version": 0,
+  "description": "Tests the smallest valid packets for each route type. A valid packet must have at least header(1) + path_len(1) + payload(1+) bytes, plus 4 bytes for transport codes if applicable.",
+  "vectors": [
+    {
+      "id": "min-001",
+      "description": "Minimal FLOOD packet: 3 bytes (header + path_len + 1-byte payload)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "3D 00 FF",
+      "notes": "Smallest valid FLOOD packet: 3 bytes total."
+    },
+    {
+      "id": "min-002",
+      "description": "Minimal DIRECT packet: 3 bytes",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "3E 00 FF",
+      "notes": "Smallest valid DIRECT packet: 3 bytes total."
+    },
+    {
+      "id": "min-003",
+      "description": "Minimal TRANSPORT_FLOOD packet: 7 bytes (header + 4 transport + path_len + 1-byte payload)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "transport_flood"
+        },
+        "transport_codes": [
+          0,
+          0
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "3C 0000 0000 00 FF",
+      "notes": "Smallest valid TRANSPORT_FLOOD packet: 7 bytes total."
+    },
+    {
+      "id": "min-004",
+      "description": "Minimal TRANSPORT_DIRECT packet: 7 bytes",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "transport_direct"
+        },
+        "transport_codes": [
+          0,
+          0
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "3F 0000 0000 00 FF",
+      "notes": "Smallest valid TRANSPORT_DIRECT packet: 7 bytes total."
+    },
+    {
+      "id": "min-005",
+      "description": "Minimal ACK via FLOOD: 6 bytes (header + path_len + 4-byte CRC)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "00000000"
+        }
+      },
+      "binary": "0D 00 00000000",
+      "notes": "ACK with zero CRC. 6 bytes total."
+    }
+  ]
+}

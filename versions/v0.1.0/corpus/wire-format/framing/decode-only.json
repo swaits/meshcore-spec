@@ -1,0 +1,75 @@
+{
+  "$schema": "../../../schema/test-vector.schema.json",
+  "name": "Framing - Decode Only",
+  "spec_ref": "versions/v0.1.0/01-wire-format.md",
+  "protocol_version": 0,
+  "description": "Tests one-way decode cases where the binary is valid to decode but may not be the canonical encoding a conformant encoder would produce.",
+  "vectors": [
+    {
+      "id": "dec-001",
+      "description": "Decode-only: ACK FLOOD with trailing bytes beyond the 4-byte CRC payload",
+      "type": "decode_only",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "DEADBEEF"
+        }
+      },
+      "binary": "0D 00 DEADBEEF 00",
+      "notes": "Binary has 1 trailing byte after the 4-byte ACK CRC. Decoders MUST accept this (payload_len includes the extra byte). Encoders would not produce trailing bytes."
+    },
+    {
+      "id": "dec-002",
+      "description": "Decode-only: raw_custom FLOOD with path hash_count=0 but hash_size=2",
+      "type": "decode_only",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 2,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "AA"
+        }
+      },
+      "binary": "3D 40 AA",
+      "notes": "Path_len byte 0x40 encodes hash_size=2 (bits 6-7 = 01) with hash_count=0. Decoders must handle non-default hash_size even when hash_count is zero. Encoders typically default hash_size=1 when hash_count=0."
+    },
+    {
+      "id": "dec-003",
+      "description": "Decode-only: raw_custom FLOOD with path hash_size=3 and hash_count=0",
+      "type": "decode_only",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 3,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "BB"
+        }
+      },
+      "binary": "3D 80 BB",
+      "notes": "Path_len byte 0x80 encodes hash_size=3 (bits 6-7 = 10) with hash_count=0. Same as dec-002 but with hash_size=3."
+    }
+  ]
+}

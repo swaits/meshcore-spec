@@ -1,0 +1,38 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Group Data Payload",
+  "spec_ref": "versions/v0.1.0/08-payload-group.md",
+  "protocol_version": 0,
+  "description": "Tests group datagram payload. Same wire format as GRP_TXT but payload type = 0x06.",
+  "vectors": [
+    {
+      "id": "grp-data-001",
+      "description": "Group datagram with known channel secret",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "grp_data",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "channel_hash": "72",
+          "cipher_mac": "D184",
+          "ciphertext": "948C819389BA4ED7B1194A0FF8E62073"
+        }
+      },
+      "binary": "19 00 72 D184 948C819389BA4ED7B1194A0FF8E62073",
+      "crypto_context": {
+        "shared_secret": "202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F",
+        "encryption_key": "202122232425262728292A2B2C2D2E2F",
+        "plaintext": "47726F75704D736721"
+      },
+      "notes": "Header 0x19 = GRP_DATA(6)+FLOOD(1). Same ciphertext as GRP_TXT since same key and plaintext."
+    }
+  ]
+}

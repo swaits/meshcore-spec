@@ -1,0 +1,61 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "HMAC-SHA256 Truncated to 2 Bytes",
+  "spec_ref": "versions/v0.1.0/14-crypto.md",
+  "protocol_version": 0,
+  "description": "Tests HMAC-SHA256 computation with 32-byte key, truncated to CIPHER_MAC_SIZE (2 bytes). The HMAC key is the full 32-byte shared secret (PUB_KEY_SIZE), not just the 16-byte AES key.",
+  "vectors": [
+    {
+      "id": "hmac-001",
+      "description": "HMAC-SHA256(key=00..1F, msg='test message') truncated to 2 bytes",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "90B8"
+        }
+      },
+      "binary": "3D 00 90B8",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "plaintext": "74657374206D657373616765"
+      },
+      "notes": "HMAC-SHA256(key=00..1F, 'test message') = 90B89BC3C5CA2C29... Truncated to 2 bytes = 90B8."
+    },
+    {
+      "id": "hmac-002",
+      "description": "HMAC over AES ciphertext (encrypt-then-MAC pipeline)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "EAB5"
+        }
+      },
+      "binary": "3D 00 EAB5",
+      "crypto_context": {
+        "shared_secret": "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F",
+        "plaintext": "D9FD218D50A4409143A7243D6D913502"
+      },
+      "notes": "HMAC key = full 32-byte secret. Message = the AES ciphertext of 'Hello'. Result truncated to 2 bytes = EAB5."
+    }
+  ]
+}

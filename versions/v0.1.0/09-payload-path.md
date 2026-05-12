@@ -82,7 +82,7 @@ hash is unique.
 - [Section 3: Path](03-path.md) — Path length encoding
 - [Section 6: Encrypted Payloads](06-payload-encrypted.md) — Outer envelope format
 - [Section 14: Cryptography](14-crypto.md) — Encrypt-then-MAC
-- Test vectors: [`corpus/payloads/path-return/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/payloads/path-return/)
+- Test vectors: [`corpus/payloads/path-return/`](https://github.com/swaits/meshcore-spec/tree/main/versions/v0.1.0/corpus/payloads/path-return/)
 
 ### Reference Implementation
 

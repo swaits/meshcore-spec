@@ -1,0 +1,131 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Header - Route Types",
+  "spec_ref": "versions/v0.1.0/02-header.md",
+  "protocol_version": 0,
+  "description": "Tests encoding and decoding of all 4 route types in the header byte, using ACK (payload_type=3) as a simple payload.",
+  "vectors": [
+    {
+      "id": "rt-000",
+      "description": "Route type TRANSPORT_FLOOD (0x00) with ACK payload",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "transport_flood"
+        },
+        "transport_codes": [
+          0,
+          0
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "01020304"
+        }
+      },
+      "binary": "0C 0000 0000 00 04030201",
+      "notes": "Header: version=0, payload_type=3 (ACK), route_type=0 (TRANSPORT_FLOOD). 0x0C = (0<<6)|(3<<2)|0. Transport codes both zero. path_len=0x00 (hash_size=1, count=0). ACK CRC 0x01020304 as LE = 04030201."
+    },
+    {
+      "id": "rt-001",
+      "description": "Route type FLOOD (0x01) with ACK payload",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "01020304"
+        }
+      },
+      "binary": "0D 00 04030201",
+      "notes": "Header: 0x0D = (0<<6)|(3<<2)|1. No transport codes. path_len=0x00. ACK CRC as LE."
+    },
+    {
+      "id": "rt-002",
+      "description": "Route type DIRECT (0x02) with ACK payload",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "01020304"
+        }
+      },
+      "binary": "0E 00 04030201",
+      "notes": "Header: 0x0E = (0<<6)|(3<<2)|2. No transport codes."
+    },
+    {
+      "id": "rt-003",
+      "description": "Route type TRANSPORT_DIRECT (0x03) with ACK payload",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "transport_direct"
+        },
+        "transport_codes": [
+          4660,
+          22136
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "01020304"
+        }
+      },
+      "binary": "0F 3412 7856 00 04030201",
+      "notes": "Header: 0x0F = (0<<6)|(3<<2)|3. Transport codes: 4660=0x1234 as LE=3412, 22136=0x5678 as LE=7856."
+    },
+    {
+      "id": "rt-004",
+      "description": "TRANSPORT_FLOOD with non-zero transport codes",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "ack",
+          "route_type": "transport_flood"
+        },
+        "transport_codes": [
+          65535,
+          1
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "ack_crc": "FFFFFFFF"
+        }
+      },
+      "binary": "0C FFFF 0100 00 FFFFFFFF",
+      "notes": "Transport code 1: 0xFFFF as LE = FFFF. Transport code 2: 1 as LE = 0100. CRC 0xFFFFFFFF as LE."
+    }
+  ]
+}

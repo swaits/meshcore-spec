@@ -1,0 +1,165 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Header - Combined Field Encoding",
+  "spec_ref": "versions/v0.1.0/02-header.md",
+  "protocol_version": 0,
+  "description": "Combinatorial tests of header byte encoding, exercising various combinations of version, payload type, and route type to verify correct bit packing.",
+  "vectors": [
+    {
+      "id": "hdr-000",
+      "description": "All-zero header: version=0, request=0, transport_flood=0",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "request",
+          "route_type": "transport_flood"
+        },
+        "transport_codes": [
+          0,
+          0
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "dest_hash": "00",
+          "src_hash": "00",
+          "cipher_mac": "0000",
+          "ciphertext": "00000000000000000000000000000000"
+        }
+      },
+      "binary": "00 0000 0000 00 0000 0000 00000000000000000000000000000000",
+      "notes": "Header: (0<<6)|(0<<2)|0 = 0x00."
+    },
+    {
+      "id": "hdr-001",
+      "description": "Version=0, ADVERT, DIRECT route",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "direct"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 2,
+          "hashes": [
+            "AA",
+            "BB"
+          ]
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "12 02 AABB FF",
+      "notes": "Header: (0<<6)|(4<<2)|2 = 0x12. path_len=0x02 (hash_size=1, count=2). Path: AA BB."
+    },
+    {
+      "id": "hdr-002",
+      "description": "Version=1, CONTROL, FLOOD route",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 1,
+          "payload_type": "control",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "FF"
+        }
+      },
+      "binary": "6D 00 FF",
+      "notes": "Header: (1<<6)|(11<<2)|1 = 0x40+0x2C+0x01 = 0x6D."
+    },
+    {
+      "id": "hdr-003",
+      "description": "Version=0, RAW_CUSTOM, TRANSPORT_DIRECT with non-trivial transport codes",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "transport_direct"
+        },
+        "transport_codes": [
+          256,
+          512
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 1,
+          "hashes": [
+            "AA"
+          ]
+        },
+        "payload": {
+          "data": "CAFEBABE"
+        }
+      },
+      "binary": "3F 0001 0002 01 AA CAFEBABE",
+      "notes": "Header: (0<<6)|(15<<2)|3 = 0x3F. Transport codes: 256=0x0100 LE=0001, 512=0x0200 LE=0002."
+    },
+    {
+      "id": "hdr-004",
+      "description": "Version=0, TRACE, FLOOD with path",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "trace",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 3,
+          "hashes": [
+            "AA",
+            "BB",
+            "CC"
+          ]
+        },
+        "payload": {
+          "data": "0102030405060708 09"
+        }
+      },
+      "binary": "25 03 AABBCC 010203040506070809",
+      "notes": "Header: (0<<6)|(9<<2)|1 = 0x25. path_len=0x03 (1-byte hashes, 3 hops)."
+    },
+    {
+      "id": "hdr-005",
+      "description": "Maximum header value that isn't 0xFF sentinel: version=2, RAW_CUSTOM, TRANSPORT_DIRECT",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 2,
+          "payload_type": "raw_custom",
+          "route_type": "transport_direct"
+        },
+        "transport_codes": [
+          0,
+          0
+        ],
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "AA"
+        }
+      },
+      "binary": "BF 0000 0000 00 AA",
+      "notes": "Header: (2<<6)|(15<<2)|3 = 0x80+0x3C+0x03 = 0xBF."
+    }
+  ]
+}

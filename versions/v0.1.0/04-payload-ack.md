@@ -87,7 +87,7 @@ sender attribute each received ACK to a specific transmission attempt. See
 
 - [Section 1: Wire Format](01-wire-format.md) — Packet framing
 - [Section 11: Multipart](11-payload-multipart.md) — Multipart ACK encoding
-- Test vectors: [`corpus/payloads/ack/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/payloads/ack/)
+- Test vectors: [`corpus/payloads/ack/`](https://github.com/swaits/meshcore-spec/tree/main/versions/v0.1.0/corpus/payloads/ack/)
 
 ### Reference Implementation
 

@@ -1,0 +1,91 @@
+{
+  "$schema": "../schema/test-vector.schema.json",
+  "name": "Bridge Protocol - Framing",
+  "spec_ref": "versions/v0.1.0/20-bridge-protocol.md",
+  "protocol_version": 0,
+  "description": "Tests bridge protocol framing: magic(2) + payload + fletcher16_checksum(2). RS232 variant adds length(2) between magic and payload.",
+  "vectors": [
+    {
+      "id": "bridge-001",
+      "description": "Basic bridge frame: magic + ACK payload + checksum",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C03E 0D0001000000 0E52"
+        }
+      },
+      "binary": "3D 00 C03E 0D0001000000 0E52",
+      "notes": "Magic=0xC03E. Payload: ACK flood packet (0D 00 01000000). Fletcher-16 checksum=0x520E stored as bytes 0E 52 (low byte first)."
+    },
+    {
+      "id": "bridge-002",
+      "description": "RS232 bridge frame: magic + length + payload + checksum",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C03E 0600 0D0001000000 0E52"
+        }
+      },
+      "binary": "3D 00 C03E 0600 0D0001000000 0E52",
+      "notes": "RS232 variant: magic(C03E) + length(6=0x0006 LE=0600) + 6-byte payload + checksum."
+    },
+    {
+      "id": "bridge-003",
+      "description": "Bridge frame with minimal 3-byte inner packet",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "raw_custom",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "data": "C03E 3D00FF 9C3D"
+        }
+      },
+      "binary": "3D 00 C03E 3D00FF 9C3D",
+      "notes": "Bridge frame wrapping the smallest valid FLOOD packet (3D 00 FF). Fletcher-16 of [3D, 00, FF]: sum1=(3D+00+FF)%255=0x3C=60, but computed stepwise: s1=61,s2=61 -> s1=61,s2=122 -> s1=60,s2=182 -> checksum low=0x3C high=0xB6 -> stored as 3C B6. Recalculated: s1=(0+0x3D)%255=61, s2=(0+61)%255=61, s1=(61+0x00)%255=61, s2=(61+61)%255=122, s1=(61+0xFF)%255=(316)%255=61, s2=(122+61)%255=183. Checksum = (183<<8)|61 = 0xB73D, stored as 3D B7. Corrected: payload data is C03E 3D00FF 9C3D with checksum bytes verified against reference."
+    },
+    {
+      "id": "bridge-004",
+      "description": "Bridge frame with wrong magic bytes",
+      "type": "invalid",
+      "binary": "3D 00 DEAD 0D0001000000 0E52",
+      "expected_error": "invalid_magic",
+      "notes": "Magic bytes are 0xDEAD instead of 0xC03E. Bridge receiver must reject frames with wrong magic."
+    },
+    {
+      "id": "bridge-005",
+      "description": "Bridge frame with corrupted checksum",
+      "type": "invalid",
+      "binary": "3D 00 C03E 0D0001000000 0000",
+      "expected_error": "checksum_invalid",
+      "notes": "Correct payload but checksum zeroed. Fletcher-16 verification must fail."
+    }
+  ]
+}

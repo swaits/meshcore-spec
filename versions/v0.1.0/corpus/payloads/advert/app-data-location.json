@@ -1,0 +1,96 @@
+{
+  "$schema": "../../schema/test-vector.schema.json",
+  "name": "Advertisement App Data - Location",
+  "spec_ref": "versions/v0.1.0/05-payload-advert.md",
+  "protocol_version": 0,
+  "description": "Tests app_data with location fields (latitude and longitude as int32_le × 1,000,000).",
+  "vectors": [
+    {
+      "id": "adl-001",
+      "description": "Chat node with location: San Francisco (37.7749, -122.4194)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "pub_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "timestamp": 0,
+          "signature": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+          "app_data": {
+            "flags": 17,
+            "latitude": 37774900,
+            "longitude": -122419400
+          }
+        }
+      },
+      "binary": "11 00 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 00000000 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 11 34664002 3807B4F8",
+      "notes": "flags=0x11: type=Chat(1), has_location(bit 4). Lat 37774900=0x02406634 LE=34664002. Lon -122419400=0xF8B40738 LE=3807B4F8."
+    },
+    {
+      "id": "adl-002",
+      "description": "Repeater with location: equator/prime meridian (0, 0)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "pub_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "timestamp": 0,
+          "signature": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+          "app_data": {
+            "flags": 18,
+            "latitude": 0,
+            "longitude": 0
+          }
+        }
+      },
+      "binary": "11 00 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 00000000 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 12 00000000 00000000",
+      "notes": "flags=0x12: type=Repeater(2), has_location. Both coords zero."
+    },
+    {
+      "id": "adl-003",
+      "description": "Sensor with negative latitude: south pole (-90, 0)",
+      "type": "encode_decode",
+      "structured": {
+        "header": {
+          "version": 0,
+          "payload_type": "advert",
+          "route_type": "flood"
+        },
+        "path": {
+          "hash_size": 1,
+          "hash_count": 0,
+          "hashes": []
+        },
+        "payload": {
+          "pub_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "timestamp": 0,
+          "signature": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+          "app_data": {
+            "flags": 20,
+            "latitude": -90000000,
+            "longitude": 0
+          }
+        }
+      },
+      "binary": "11 00 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 00000000 BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 14 80B5A2FA 00000000",
+      "notes": "flags=0x14: type=Sensor(4), has_location. Lat -90000000=0xFAA2B580 LE=80B5A2FA. Lon 0."
+    }
+  ]
+}
