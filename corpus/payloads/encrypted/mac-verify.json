@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Encrypted Payload - MAC Verification",
-  "spec_ref": "spec/06-payload-encrypted.md",
+  "spec_ref": "src/06-payload-encrypted.md",
   "protocol_version": 0,
   "description": "Tests MAC verification: valid MACs must pass, tampered MACs or ciphertext must fail.",
   "vectors": [

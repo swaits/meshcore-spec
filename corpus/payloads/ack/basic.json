@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "ACK Payload - Basic",
-  "spec_ref": "spec/04-payload-ack.md",
+  "spec_ref": "src/04-payload-ack.md",
   "protocol_version": 0,
   "description": "Basic ACK payload encoding/decoding tests with various CRC values.",
   "vectors": [

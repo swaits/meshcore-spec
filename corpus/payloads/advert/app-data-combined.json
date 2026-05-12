@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Advertisement App Data - Combined Optional Fields",
-  "spec_ref": "spec/05-payload-advert.md",
+  "spec_ref": "src/05-payload-advert.md",
   "protocol_version": 0,
   "description": "Tests app_data with multiple optional fields present simultaneously. Fields appear in order: flags, location (lat+lon), feat1, feat2, name.",
   "vectors": [

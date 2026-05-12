@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Trace Payload - Basic",
-  "spec_ref": "spec/10-payload-trace.md",
+  "spec_ref": "src/10-payload-trace.md",
   "protocol_version": 0,
   "description": "Tests the basic 9-byte TRACE payload structure: tag(4) + auth_code(4) + flags(1).",
   "vectors": [

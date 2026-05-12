@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Encrypt-then-MAC Roundtrip",
-  "spec_ref": "spec/14-crypto.md",
+  "spec_ref": "src/14-crypto.md",
   "protocol_version": 0,
   "description": "Full encrypt-then-MAC pipeline test vectors. Each vector provides the shared secret, plaintext, and expected MAC+ciphertext output. Implementations should verify: (1) encrypt produces the ciphertext, (2) HMAC produces the MAC, (3) MACThenDecrypt recovers the plaintext.",
   "vectors": [

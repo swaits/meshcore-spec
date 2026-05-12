@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Encrypted Payload - Roundtrip Verification",
-  "spec_ref": "spec/06-payload-encrypted.md",
+  "spec_ref": "src/06-payload-encrypted.md",
   "protocol_version": 0,
   "description": "Roundtrip encrypt-then-MAC verification vectors. Each vector provides full key material enabling implementations to verify: (1) encryption produces the given ciphertext, (2) MAC computation produces the given MAC, (3) MAC verification succeeds, (4) decryption recovers the plaintext.",
   "vectors": [

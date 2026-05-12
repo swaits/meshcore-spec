@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Path - Hash Counts",
-  "spec_ref": "spec/03-path.md",
+  "spec_ref": "src/03-path.md",
   "protocol_version": 0,
   "description": "Tests various hash count values including zero, small, and maximum values for each hash size.",
   "vectors": [

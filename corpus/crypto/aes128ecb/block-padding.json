@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "AES-128-ECB Block Padding",
-  "spec_ref": "spec/14-crypto.md",
+  "spec_ref": "src/14-crypto.md",
   "protocol_version": 0,
   "description": "Tests AES-128-ECB zero-padding for partial blocks. MeshCore pads the final block with zeros before encryption.",
   "vectors": [

@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Multipart Payload - Basic",
-  "spec_ref": "spec/11-payload-multipart.md",
+  "spec_ref": "src/11-payload-multipart.md",
   "protocol_version": 0,
   "description": "Tests multipart payload encoding: first byte = (remaining << 4) | sub_type. Currently only multipart ACK (sub_type=3) is defined.",
   "vectors": [

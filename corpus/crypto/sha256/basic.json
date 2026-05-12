@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "SHA-256 Basic",
-  "spec_ref": "spec/14-crypto.md",
+  "spec_ref": "src/14-crypto.md",
   "protocol_version": 0,
   "description": "Basic SHA-256 hash computation test vectors. MeshCore uses SHA-256 for packet hashing, channel hash derivation, and HMAC.",
   "vectors": [

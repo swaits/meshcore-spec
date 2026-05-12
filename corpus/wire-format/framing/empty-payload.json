@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Framing - Empty Payload Rejection",
-  "spec_ref": "spec/01-wire-format.md",
+  "spec_ref": "src/01-wire-format.md",
   "protocol_version": 0,
   "description": "Verifies that packets with zero-length payload are rejected. The reference implementation (Packet::readFrom) checks 'if (i >= len) return false' after reading header+transport+path_len+path, requiring at least 1 byte of payload.",
   "vectors": [

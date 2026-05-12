@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Encrypted Payload - Basic",
-  "spec_ref": "spec/06-payload-encrypted.md",
+  "spec_ref": "src/06-payload-encrypted.md",
   "protocol_version": 0,
   "description": "Tests encrypted payload encoding (REQ/RESPONSE/TXT_MSG) with known cryptographic material. Uses shared_secret = 0x000102...1F, AES key = first 16 bytes, HMAC key = full 32 bytes.",
   "vectors": [

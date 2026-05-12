@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "AES-128-ECB Encryption",
-  "spec_ref": "spec/14-crypto.md",
+  "spec_ref": "src/14-crypto.md",
   "protocol_version": 0,
   "description": "Standalone AES-128-ECB encryption test vectors. Key is the first 16 bytes of the shared secret. These vectors test the raw encryption operation without MAC.",
   "vectors": [

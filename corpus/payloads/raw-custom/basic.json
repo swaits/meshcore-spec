@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Raw Custom Payload - Basic",
-  "spec_ref": "spec/13-payload-raw-custom.md",
+  "spec_ref": "src/13-payload-raw-custom.md",
   "protocol_version": 0,
   "description": "Tests raw custom payload encoding. RAW_CUSTOM carries application-defined raw bytes.",
   "vectors": [

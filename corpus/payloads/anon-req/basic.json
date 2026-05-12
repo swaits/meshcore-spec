@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Anonymous Request Payload",
-  "spec_ref": "spec/07-payload-anon-req.md",
+  "spec_ref": "src/07-payload-anon-req.md",
   "protocol_version": 0,
   "description": "Tests anonymous request payload: dest_hash(1) + sender_pub_key(32) + cipher_mac(2) + ciphertext.",
   "vectors": [

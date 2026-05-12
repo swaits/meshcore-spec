@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Group Text Payload",
-  "spec_ref": "spec/08-payload-group.md",
+  "spec_ref": "src/08-payload-group.md",
   "protocol_version": 0,
   "description": "Tests group text message payload: channel_hash(1) + cipher_mac(2) + ciphertext.",
   "vectors": [

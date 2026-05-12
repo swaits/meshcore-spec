@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Advertisement App Data - Node Types",
-  "spec_ref": "spec/05-payload-advert.md",
+  "spec_ref": "src/05-payload-advert.md",
   "protocol_version": 0,
   "description": "Tests all defined node types in the app_data flags field (bits 0-3). Uses a common pub_key, zero timestamp, and zero signature for structural testing.",
   "vectors": [

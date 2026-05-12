@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Header - Payload Types",
-  "spec_ref": "spec/02-header.md",
+  "spec_ref": "src/02-header.md",
   "protocol_version": 0,
   "description": "Tests encoding of all defined payload types in the header byte. Uses FLOOD routing and minimal payloads to isolate header encoding.",
   "vectors": [

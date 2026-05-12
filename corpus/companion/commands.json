@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/test-vector.schema.json",
   "name": "Companion Protocol - Commands",
-  "spec_ref": "spec/18-companion-protocol.md",
+  "spec_ref": "src/18-companion-protocol.md",
   "protocol_version": 0,
   "description": "Tests companion protocol command type encoding for various command types.",
   "vectors": [

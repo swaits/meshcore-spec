@@ -14,7 +14,8 @@
 
 ## Editing the Specification
 
-1. Spec documents live in `spec/` and are numbered for reading order.
+1. Spec documents live in `src/` (the mdbook source root) and are numbered for
+   reading order. New chapters must also be listed in `src/SUMMARY.md`.
 2. Use RFC 2119 language (MUST, SHOULD, MAY) for normative requirements.
 3. Include ASCII wire format diagrams where applicable.
 4. Cross-reference related spec sections and test vector files.

@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Advertisement App Data - Location",
-  "spec_ref": "spec/05-payload-advert.md",
+  "spec_ref": "src/05-payload-advert.md",
   "protocol_version": 0,
   "description": "Tests app_data with location fields (latitude and longitude as int32_le × 1,000,000).",
   "vectors": [

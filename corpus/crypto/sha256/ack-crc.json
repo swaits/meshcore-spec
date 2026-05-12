@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "SHA-256 ACK CRC Computation",
-  "spec_ref": "spec/04-payload-ack.md",
+  "spec_ref": "src/04-payload-ack.md",
   "protocol_version": 0,
   "description": "Tests MeshCore ACK CRC computation: SHA-256(timestamp_le || txt_type_attempt || text || sender_pub_key)[0..3]. Each vector presents the full ACK packet that would be returned, along with the crypto_context showing the plaintext fed to SHA-256. Vectors ack-crc-001..004 share timestamp/text/pub_key and differ only in the attempt nibble of txt_type_attempt, demonstrating that each retry produces a distinct ACK CRC.",
   "vectors": [

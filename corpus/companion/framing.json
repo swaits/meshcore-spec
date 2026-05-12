@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/test-vector.schema.json",
   "name": "Companion Protocol - Framing",
-  "spec_ref": "spec/18-companion-protocol.md",
+  "spec_ref": "src/18-companion-protocol.md",
   "protocol_version": 0,
   "description": "Tests companion protocol frame encoding: type byte followed by variable-length data.",
   "vectors": [

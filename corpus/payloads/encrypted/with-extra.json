@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Encrypted Payload - Extra Edge Cases",
-  "spec_ref": "spec/06-payload-encrypted.md",
+  "spec_ref": "src/06-payload-encrypted.md",
   "protocol_version": 0,
   "description": "Additional encrypted payload tests: non-FLOOD routes, hash_size>1 paths, 32-byte plaintext, and payload-level invalid cases.",
   "vectors": [

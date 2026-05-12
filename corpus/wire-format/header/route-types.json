@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Header - Route Types",
-  "spec_ref": "spec/02-header.md",
+  "spec_ref": "src/02-header.md",
   "protocol_version": 0,
   "description": "Tests encoding and decoding of all 4 route types in the header byte, using ACK (payload_type=3) as a simple payload.",
   "vectors": [

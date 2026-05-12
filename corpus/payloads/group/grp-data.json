@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Group Data Payload",
-  "spec_ref": "spec/08-payload-group.md",
+  "spec_ref": "src/08-payload-group.md",
   "protocol_version": 0,
   "description": "Tests group datagram payload. Same wire format as GRP_TXT but payload type = 0x06.",
   "vectors": [

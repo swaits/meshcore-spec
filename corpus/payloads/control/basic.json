@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Control Payload - Basic",
-  "spec_ref": "spec/12-payload-control.md",
+  "spec_ref": "src/12-payload-control.md",
   "protocol_version": 0,
   "description": "Tests control payload encoding. Control packets carry raw bytes where the first byte's bit 7 indicates zero-hop-only restriction.",
   "vectors": [

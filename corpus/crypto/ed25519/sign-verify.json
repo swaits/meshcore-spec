@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Ed25519 Sign/Verify",
-  "spec_ref": "spec/15-identity.md",
+  "spec_ref": "src/15-identity.md",
   "protocol_version": 0,
   "description": "Ed25519 signature test vectors. MeshCore uses Ed25519 for advertisement signing. These vectors use RFC 8032 test keypairs for cross-validation.",
   "vectors": [

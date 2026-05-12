@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/test-vector.schema.json",
   "name": "Bridge Protocol - Framing",
-  "spec_ref": "spec/20-bridge-protocol.md",
+  "spec_ref": "src/20-bridge-protocol.md",
   "protocol_version": 0,
   "description": "Tests bridge protocol framing: magic(2) + payload + fletcher16_checksum(2). RS232 variant adds length(2) between magic and payload.",
   "vectors": [

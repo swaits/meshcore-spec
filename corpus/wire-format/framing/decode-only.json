@@ -1,7 +1,7 @@
 {
   "$schema": "../../../schema/test-vector.schema.json",
   "name": "Framing - Decode Only",
-  "spec_ref": "spec/01-wire-format.md",
+  "spec_ref": "src/01-wire-format.md",
   "protocol_version": 0,
   "description": "Tests one-way decode cases where the binary is valid to decode but may not be the canonical encoding a conformant encoder would produce.",
   "vectors": [

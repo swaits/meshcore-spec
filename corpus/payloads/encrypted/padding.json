@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Encrypted Payload - AES Block Padding",
-  "spec_ref": "spec/06-payload-encrypted.md",
+  "spec_ref": "src/06-payload-encrypted.md",
   "protocol_version": 0,
   "description": "Tests AES-128-ECB zero-padding behavior at block boundaries. Plaintexts of 1, 15, 16, 17, and 32 bytes exercise all padding edge cases.",
   "vectors": [

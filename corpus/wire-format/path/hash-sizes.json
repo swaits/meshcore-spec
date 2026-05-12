@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Path - Hash Sizes",
-  "spec_ref": "spec/03-path.md",
+  "spec_ref": "src/03-path.md",
   "protocol_version": 0,
   "description": "Tests all valid hash sizes (1, 2, 3 bytes) in the path length encoding. These vectors are critical for catching implementations that treat path_len as a raw byte count.",
   "vectors": [

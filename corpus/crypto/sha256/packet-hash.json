@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "SHA-256 Packet Hash",
-  "spec_ref": "spec/16-packet-hash.md",
+  "spec_ref": "src/16-packet-hash.md",
   "protocol_version": 0,
   "description": "Tests MeshCore packet hash computation: SHA-256(payload_type || payload)[0..7]. TRACE packets additionally include path_len in the hash input.",
   "vectors": [

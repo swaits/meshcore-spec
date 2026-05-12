@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/test-vector.schema.json",
   "name": "KISS Protocol - SetHardware Extensions",
-  "spec_ref": "spec/19-kiss-protocol.md",
+  "spec_ref": "src/19-kiss-protocol.md",
   "protocol_version": 0,
   "description": "Tests MeshCore-specific SetHardware (0x06) sub-commands and responses.",
   "vectors": [

@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Invalid - Bad Path Length Encoding",
-  "spec_ref": "spec/03-path.md",
+  "spec_ref": "src/03-path.md",
   "protocol_version": 0,
   "description": "Tests invalid path_len values including the reserved hash_size=4 and path overflow conditions.",
   "vectors": [

@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Path - Boundary Conditions",
-  "spec_ref": "spec/03-path.md",
+  "spec_ref": "src/03-path.md",
   "protocol_version": 0,
   "description": "Tests boundary conditions for path encoding including maximum valid values and values just below overflow thresholds.",
   "vectors": [

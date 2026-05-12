@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Transport Codes - Basic",
-  "spec_ref": "spec/01-wire-format.md",
+  "spec_ref": "src/01-wire-format.md",
   "protocol_version": 0,
   "description": "Tests transport code encoding with various values and route types that include/exclude transport codes.",
   "vectors": [

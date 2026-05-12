@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Header - Protocol Versions",
-  "spec_ref": "spec/02-header.md",
+  "spec_ref": "src/02-header.md",
   "protocol_version": 0,
   "description": "Tests encoding of all 4 protocol version values in header bits 6-7. Uses ACK (type=3) with FLOOD routing as a simple baseline.",
   "vectors": [

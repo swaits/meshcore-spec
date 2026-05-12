@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Path Return Payload - Basic",
-  "spec_ref": "spec/09-payload-path.md",
+  "spec_ref": "src/09-payload-path.md",
   "protocol_version": 0,
   "description": "Tests path return payload outer structure: dest_hash(1) + src_hash(1) + encrypt-then-MAC. The encrypted inner format contains path_len + path + extra_type + extra_data.",
   "vectors": [

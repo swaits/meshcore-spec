@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "HMAC-SHA256 Truncated to 2 Bytes",
-  "spec_ref": "spec/14-crypto.md",
+  "spec_ref": "src/14-crypto.md",
   "protocol_version": 0,
   "description": "Tests HMAC-SHA256 computation with 32-byte key, truncated to CIPHER_MAC_SIZE (2 bytes). The HMAC key is the full 32-byte shared secret (PUB_KEY_SIZE), not just the 16-byte AES key.",
   "vectors": [

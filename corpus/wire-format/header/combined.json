@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Header - Combined Field Encoding",
-  "spec_ref": "spec/02-header.md",
+  "spec_ref": "src/02-header.md",
   "protocol_version": 0,
   "description": "Combinatorial tests of header byte encoding, exercising various combinations of version, payload type, and route type to verify correct bit packing.",
   "vectors": [

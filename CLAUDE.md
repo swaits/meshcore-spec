@@ -5,7 +5,8 @@
 A specification and conformance test suite for the MeshCore mesh networking
 protocol. It contains:
 
-1. RFC-style spec documents in `spec/` (Markdown, using RFC 2119 language)
+1. RFC-style spec documents in `src/` (Markdown, using RFC 2119 language; this
+   is also the mdbook source root)
 2. JSON test vector corpus in `corpus/`
 3. Validation tooling in `tools/`
 
@@ -31,7 +32,8 @@ protocol. It contains:
 
 ## File Organization
 
-- `spec/NN-topic.md` — Spec sections, numbered for reading order
+- `src/NN-topic.md` — Spec sections, numbered for reading order (mdbook root)
+- `src/SUMMARY.md` — mdbook table of contents; new chapters MUST be added here
 - `corpus/schema/` — JSON Schema for test vector validation
 - `corpus/{layer}/{type}/` — Test vectors organized by protocol layer
 - `tools/` — Python validation and generation scripts

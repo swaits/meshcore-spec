@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Invalid - Truncated Packets",
-  "spec_ref": "spec/01-wire-format.md",
+  "spec_ref": "src/01-wire-format.md",
   "protocol_version": 0,
   "description": "Tests packets that are truncated at various points, verifying that decoders reject them gracefully.",
   "vectors": [

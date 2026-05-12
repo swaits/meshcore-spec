@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Advertisement Payload - Basic Structure",
-  "spec_ref": "spec/05-payload-advert.md",
+  "spec_ref": "src/05-payload-advert.md",
   "protocol_version": 0,
   "description": "Tests the basic structure of advertisement payloads: pub_key(32) + timestamp(4) + signature(64) + optional app_data. Uses synthetic signature bytes since signature verification requires real Ed25519 operations (see signature-verify.json for verifiable vectors).",
   "vectors": [

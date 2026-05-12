@@ -3,6 +3,8 @@
 A comprehensive specification and conformance test suite for the
 [MeshCore](https://github.com/meshcore-dev/MeshCore) mesh networking protocol.
 
+**📖 Read the spec online:** <https://swaits.github.io/meshcore-spec/>
+
 MeshCore Spec aims to be the authoritative, machine-readable definition of the
 MeshCore wire format — much like [RubySpec](https://github.com/ruby/spec) became
 the definitive specification of the Ruby language. Any implementation that passes
@@ -38,12 +40,17 @@ before relying on the spec for anything load-bearing.
 
 ## What's Here
 
-- **`spec/`** — RFC-style protocol specification in Markdown, covering every
-  layer from packet framing to cryptographic operations.
+- **`src/`** — RFC-style protocol specification in Markdown, covering every
+  layer from packet framing to cryptographic operations. Also the source root
+  for the [mdBook](https://rust-lang.github.io/mdBook/) build published to
+  GitHub Pages.
 - **`corpus/`** — JSON test vectors organized by protocol layer.
   Each vector pairs a structured representation with its exact binary encoding,
   enabling any implementation to verify encode and decode correctness.
 - **`tools/`** — Validation and generation utilities.
+- **`book.toml`** + **`.github/workflows/mdbook.yml`** — mdBook configuration
+  and the GitHub Actions workflow that builds and deploys the spec on every
+  push to `main`.
 
 ## Test Vector Format
 

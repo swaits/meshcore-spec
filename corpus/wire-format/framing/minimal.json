@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Framing - Minimal Valid Packets",
-  "spec_ref": "spec/01-wire-format.md",
+  "spec_ref": "src/01-wire-format.md",
   "protocol_version": 0,
   "description": "Tests the smallest valid packets for each route type. A valid packet must have at least header(1) + path_len(1) + payload(1+) bytes, plus 4 bytes for transport codes if applicable.",
   "vectors": [

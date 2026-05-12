@@ -20,3 +20,6 @@ Thumbs.db
 /build/
 /dist/
 /references/
+
+# mdBook output
+/book/

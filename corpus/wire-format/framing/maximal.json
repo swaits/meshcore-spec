@@ -1,7 +1,7 @@
 {
   "$schema": "../../schema/test-vector.schema.json",
   "name": "Framing - Maximum Size Packets",
-  "spec_ref": "spec/01-wire-format.md",
+  "spec_ref": "src/01-wire-format.md",
   "protocol_version": 0,
   "description": "Tests packets at or near the maximum wire size of 255 bytes (MAX_TRANS_UNIT). Verifies size calculation: total = 1 (header) + transport(0|4) + 1 (path_len) + path_bytes + payload_len.",
   "vectors": [
