@@ -3,7 +3,6 @@ name: mdBook
 on:
   push:
     branches: [main]
-    tags: ['v*']
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -26,10 +25,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (with tags)
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Install mise
         uses: jdx/mise-action@v2

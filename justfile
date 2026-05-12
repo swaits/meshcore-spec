@@ -35,3 +35,24 @@ clean:
 # Run the corpus validator.
 validate:
     python3 tools/validate.py corpus/
+
+# Cut a frozen spec version: copy ./src/ to ./versions/<VERSION>/.
+# Usage: just cut-version v0.2.0
+cut-version VERSION:
+    #!/usr/bin/env sh
+    set -eu
+    case "{{VERSION}}" in
+        v[0-9]*.[0-9]*.[0-9]*) ;;
+        *) echo "Version must look like vX.Y.Z (got '{{VERSION}}')" >&2; exit 1 ;;
+    esac
+    if [ -e "versions/{{VERSION}}" ]; then
+        echo "versions/{{VERSION}} already exists; not overwriting." >&2
+        exit 1
+    fi
+    mkdir -p versions
+    cp -R src "versions/{{VERSION}}"
+    echo "Snapshotted src/ -> versions/{{VERSION}}"
+    echo
+    echo "Next steps:"
+    echo "  - git add versions/{{VERSION}} && commit (e.g. \"release {{VERSION}}\")"
+    echo "  - optionally tag the commit: git tag {{VERSION}}"

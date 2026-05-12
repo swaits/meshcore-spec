@@ -42,8 +42,16 @@ The published site preserves prior spec versions alongside the rolling
 - `https://swaits.github.io/meshcore-spec/latest/` — built from the tip of
   `main`. May change between any two visits.
 - `https://swaits.github.io/meshcore-spec/v0.1.0/` (and likewise for any
-  future `vX.Y.Z`) — a frozen snapshot built from the matching git tag.
-  Suitable for citing or for certifying an implementation against.
+  future `vX.Y.Z`) — a frozen content snapshot. Suitable for citing or for
+  certifying an implementation against.
+
+Frozen versions live as their own directory in the repo
+(`versions/vX.Y.Z/`) — a literal copy of `src/` taken at release time.
+This deliberately separates **content** (versioned, frozen) from **site
+infrastructure** (theme, picker, build pipeline; lives at the repo root
+and is unversioned). Every deploy rebuilds every published version using
+today's infrastructure, so site improvements show up everywhere without
+backporting.
 
 The version-picker in the top-right of every page lists every published
 version; switching keeps you on the same chapter where it exists in the
