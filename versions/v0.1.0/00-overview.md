@@ -14,10 +14,10 @@
 > load-bearing.
 
 This document was primarily written by an AI (Claude, by Anthropic — mostly
-the Opus 4.x family) under the direction of Stephen Waits, with human
-proofreading and editing on top. Substantive edits — additions, audit passes,
-errata fixes — are produced through model-driven analysis of the upstream
-MeshCore C++ source and reviewed before commit.
+the Opus 4.x family) under the direction of [SWaits](https://swaits.com/),
+with human proofreading and editing on top. Substantive edits — additions,
+audit passes, errata fixes — are produced through model-driven analysis of
+the upstream MeshCore C++ source and reviewed before commit.
 
 The **upstream MeshCore C++ firmware is the source of truth** for all
 protocol behavior. This spec is downstream and derivative. Whenever the spec

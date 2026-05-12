@@ -1,6 +1,6 @@
 [book]
 title = "MeshCore Protocol Specification"
-authors = ["Stephen Waits"]
+authors = ["SWaits"]
 description = "An independent, AI-authored specification and conformance test corpus for the MeshCore mesh networking protocol. The official MeshCore C++ firmware is the source of truth; this spec is downstream."
 language = "en"
 src = "src"

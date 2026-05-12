@@ -20,10 +20,10 @@ endorsed by, or maintained by the upstream MeshCore project. Read this section
 before relying on the spec for anything load-bearing.
 
 - **Authorship.** The spec, the corpus, and the tooling were written by Claude
-  (Anthropic, primarily Opus 4.x) under the direction of Stephen Waits.
-  Substantive edits — additions, clarifications, audit passes — are produced
-  through model-driven analysis of the official MeshCore source and reviewed
-  before commit.
+  (Anthropic, primarily Opus 4.x) under the direction of
+  [SWaits](https://swaits.com/). Substantive edits — additions, clarifications,
+  audit passes — are produced through model-driven analysis of the official
+  MeshCore source and reviewed before commit.
 - **Source of truth.** The official MeshCore firmware at
   [meshcore-dev/MeshCore](https://github.com/meshcore-dev/MeshCore) is the
   **golden source of truth** for all protocol behavior. Whenever this spec and
@@ -108,4 +108,4 @@ which together are the authoritative reference this spec derives from.
 
 ## Author
 
-Stephen Waits <steve@waits.net>
+[SWaits](https://swaits.com/)
