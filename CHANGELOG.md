@@ -1,5 +1,92 @@
 # Changelog
 
+## 2026-05-12 — Publication-Readiness Pass
+
+**Upstream baseline:** Validated against
+[meshcore-dev/MeshCore](https://github.com/meshcore-dev/MeshCore) at commit
+`1a7b3614a8439894714a58af55ab7f501e6bb928` (2026-04-28). Every normative
+claim in this pass was cross-checked against this commit. Where the in-tree
+spec disagreed with upstream, upstream won.
+
+### Process
+
+- Adopted **conventional commits** as the commit-message convention for this
+  repo. Types: `spec(<section>)`, `corpus(<area>)`, `docs`, `tools`,
+  `chore`, `fix`, `feat`. Subject ≤ 70 chars; body explains *why* and cites
+  the upstream commit/function the change was validated against.
+- Established **"upstream firmware is the golden source of truth"** as a
+  load-bearing principle for the project: DongLoRa firmware, the ai-bot,
+  this spec, and prior audit notes are all downstream of the official C++.
+  When any of them disagree with upstream, upstream wins. This is now
+  reflected in the README's Provenance section and applied to every edit
+  below.
+
+### Added
+
+- **`corpus/crypto/sha256/ack-crc.json`** — four SHA-256-truncation test
+  vectors covering ACK CRC computation across attempts 0..3. Each vector
+  pairs a structured ACK packet with the plaintext + sender pub_key it was
+  derived from, pinning the algorithm
+  `SHA-256(timestamp(4) || txt_type_attempt(1) || text || sender_pub_key(32))[0..3]`.
+- **`spec/04-payload-ack.md`** — explicit ACK CRC computation algorithm
+  written out, including the `TXT_TYPE_SIGNED_PLAIN` variant (which uses the
+  receiver's public key and includes the 4-byte signature in the prefix).
+- **`spec/06-payload-encrypted.md`** — new "Attempt Counter Semantics"
+  subsection covering the 2-bit attempt encoding, the `[NUL][attempt_full]`
+  tail-byte mechanism upstream uses for attempts > 3, and the ACK-CRC
+  collision implications when attempts roll over. New "Reliable DM Delivery"
+  subsection covering expected-ACK tracking, retry, MULTIPART/plain ACK
+  consumption, and the optional duplicate-DM reply cache.
+- **`spec/11-payload-multipart.md`** — new "Multipart ACK Usage Constraints"
+  subsection: direct-routed paths only, CRC dedup, ~300 ms inter-copy delay,
+  emission count controlled by `getExtraAckTransmitCount()` (upstream
+  default 0). Clarified that the chain terminates with a plain
+  `PAYLOAD_TYPE_ACK`, not a MULTIPART with `remaining = 0`.
+- **`spec/17-routing.md`** — new "Sender Behavior (Informational)" section:
+  path learning, PATH_RETURN emission and timing, flood/direct fallback on
+  retry, sender-side transmission priority table.
+- **`README.md`** — prominent **Provenance** disclosure block, plus a new
+  **Author** section.
+
+### Clarified
+
+- **`spec/06-payload-encrypted.md`** — encryption procedure now spells out
+  zero-padding to a 16-byte AES block boundary before AES-128-ECB, and
+  warns that the scheme is not unambiguous (receiver disambiguates trailing
+  zeros via the inner plaintext format).
+- **`spec/11-payload-multipart.md`** — the MULTIPART chain definition now
+  explicitly notes the descending `remaining` count and the plain-ACK
+  finalizer.
+
+### Corrected
+
+- **`spec/17-routing.md`** — the previous wording described the reference
+  implementation's path-replacement as a hash-size/SNR heuristic. In fact,
+  `BaseChatMesh::onContactPathRecv()` in upstream does an **unconditional
+  replace**, with an inline source comment flagging selection heuristics as
+  future work. Likewise, the spec no longer implies the reference
+  implementation has a path TTL — it doesn't. Quality heuristics and TTL
+  policies are noted as implementation extensions.
+
+### Out of scope this pass
+
+Several observations from `donglora/firmware` and `donglora/ai-bot` were
+considered and **dropped** when found to be ai-bot/firmware-specific rather
+than upstream behavior. Examples: a 30-minute route TTL, a 3 dB SNR margin
+for path upgrades, rejection of 1-byte path hashes, a 150 ms PATH_RETURN
+delay, hard-coded sync word `0x1424`, and a pending-ACK table capped at 64
+entries / 125 s. Per the upstream-is-golden principle, these would have
+read like upstream-blessed reference values, which they are not. They are
+implementation extensions that downstream projects may adopt at their
+discretion.
+
+Radio/hardware-state behaviors surfaced by the DongLoRa firmware audit
+(CAD/LBT retry strategy, RX session preservation across SET_CONFIG,
+host-side backpressure, UART frame-decoder reset) were also excluded —
+they are radio-driver concerns rather than packet-format/protocol
+semantics. A future non-normative "Implementation Notes" appendix could
+collect such items.
+
 ## 2026-04-01 — Comprehensive Spec Audit
 
 ### Removed
