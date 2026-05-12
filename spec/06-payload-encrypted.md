@@ -49,11 +49,16 @@ The ciphertext is produced using the encrypt-then-MAC scheme described in
 [Section 14](14-crypto.md):
 
 1. Compute the ECDH shared secret between sender and recipient.
-2. Encrypt the plaintext using AES-128-ECB with the first 16 bytes of the
-   shared secret as the key. Zero-pad the final block.
-3. Compute HMAC-SHA256 over the ciphertext using the full 32-byte shared secret
-   as the HMAC key. Truncate to 2 bytes.
-4. Prepend the 2-byte MAC to the ciphertext.
+2. Zero-pad the plaintext on the right with `0x00` bytes until its length is a
+   multiple of 16 (AES block size). If the plaintext is already a multiple of
+   16, no padding is added (the scheme is not unambiguous PKCS#7-style
+   padding — the receiver MUST disambiguate trailing zeros using the inner
+   plaintext format; see "Plaintext Format" below).
+3. Encrypt the padded plaintext using AES-128-ECB with the first 16 bytes of
+   the shared secret as the key.
+4. Compute HMAC-SHA256 over the ciphertext using the full 32-byte shared
+   secret as the HMAC key. Truncate to 2 bytes.
+5. Prepend the 2-byte MAC to the ciphertext.
 
 ### Decryption
 
