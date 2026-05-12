@@ -97,7 +97,7 @@ At that point, `onTraceRecv` is called with:
 ### Cross-References
 
 - [Section 16: Packet Hash](16-packet-hash.md) — TRACE packets include path_len in hash
-- Test vectors: `corpus/payloads/trace/`
+- Test vectors: [`corpus/payloads/trace/`](https://github.com/swaits/meshcore-spec/tree/main/corpus/payloads/trace/)
 
 ### Reference Implementation
 

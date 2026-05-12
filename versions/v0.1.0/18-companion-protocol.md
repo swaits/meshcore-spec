@@ -89,7 +89,7 @@ implementations SHOULD request a larger MTU (up to 512 bytes).
 ### Cross-References
 
 - [Section 1: Wire Format](01-wire-format.md) — Underlying packet format
-- Test vectors: `corpus/companion/`
+- Test vectors: [`corpus/companion/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/companion/)
 
 ### Reference Implementation
 

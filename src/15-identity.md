@@ -81,7 +81,7 @@ Hex representation uses uppercase characters with 2 hex digits per byte.
 - [Section 3: Path](03-path.md) — Hash size in path encoding
 - [Section 5: Advertisement](05-payload-advert.md) — Signature usage
 - [Section 14: Cryptography](14-crypto.md) — Shared secret usage
-- Test vectors: `corpus/crypto/ed25519/`, `corpus/crypto/ecdh/`
+- Test vectors: [`corpus/crypto/ed25519/`](https://github.com/swaits/meshcore-spec/tree/main/corpus/crypto/ed25519/), [`corpus/crypto/ecdh/`](https://github.com/swaits/meshcore-spec/tree/main/corpus/crypto/ecdh/)
 
 ### Reference Implementation
 

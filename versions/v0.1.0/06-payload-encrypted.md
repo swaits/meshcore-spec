@@ -159,7 +159,7 @@ patterns include:
 
 - [Section 14: Cryptography](14-crypto.md) — Encrypt-then-MAC details
 - [Section 15: Identity](15-identity.md) — ECDH shared secret computation
-- Test vectors: `corpus/payloads/encrypted/`
+- Test vectors: [`corpus/payloads/encrypted/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/payloads/encrypted/)
 
 ### Reference Implementation
 

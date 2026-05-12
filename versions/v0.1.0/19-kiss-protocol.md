@@ -173,7 +173,7 @@ Response codes: `response = command | 0x80`
 
 - [Section 1: Wire Format](01-wire-format.md) — Packet format within data frames
 - [Section 14: Cryptography](14-crypto.md) — Crypto operations via SetHardware
-- Test vectors: `corpus/kiss/`
+- Test vectors: [`corpus/kiss/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/kiss/)
 
 ### Reference Implementation
 

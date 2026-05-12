@@ -60,7 +60,7 @@ formats are application-defined, but typically include:
 ### Cross-References
 
 - [Section 17: Routing](17-routing.md) — Zero-hop delivery
-- Test vectors: `corpus/payloads/control/`
+- Test vectors: [`corpus/payloads/control/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/payloads/control/)
 
 ### Reference Implementation
 

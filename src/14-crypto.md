@@ -110,7 +110,7 @@ Output format:
 
 - [Section 6: Encrypted Payloads](06-payload-encrypted.md) — Usage in packet payloads
 - [Section 15: Identity](15-identity.md) — Shared secret computation via ECDH
-- Test vectors: `corpus/crypto/`
+- Test vectors: [`corpus/crypto/`](https://github.com/swaits/meshcore-spec/tree/main/corpus/crypto/)
 
 ### Reference Implementation
 

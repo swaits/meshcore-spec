@@ -72,7 +72,7 @@ secret. Only a successful MAC verification confirms the correct channel.
 ### Cross-References
 
 - [Section 14: Cryptography](14-crypto.md) — Encrypt-then-MAC
-- Test vectors: `corpus/payloads/group/`
+- Test vectors: [`corpus/payloads/group/`](https://github.com/swaits/meshcore-spec/tree/main/corpus/payloads/group/)
 
 ### Reference Implementation
 

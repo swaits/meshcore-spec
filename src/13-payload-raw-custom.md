@@ -41,7 +41,7 @@ when received via direct routing. They are NOT flood-routed.
 
 ### Cross-References
 
-- Test vectors: `corpus/payloads/raw-custom/`
+- Test vectors: [`corpus/payloads/raw-custom/`](https://github.com/swaits/meshcore-spec/tree/main/corpus/payloads/raw-custom/)
 
 ### Reference Implementation
 

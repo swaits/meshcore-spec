@@ -143,7 +143,7 @@ this class of bug.
 - [Section 1: Wire Format](01-wire-format.md) — Overall packet structure
 - [Section 2: Header](02-header.md) — Header encoding
 - [Section 15: Identity](15-identity.md) — Hash derivation from public keys
-- Test vectors: `corpus/wire-format/path/`
+- Test vectors: [`corpus/wire-format/path/`](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus/wire-format/path/)
 
 ### Reference Implementation
 

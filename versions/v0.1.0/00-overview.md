@@ -31,7 +31,7 @@ DongLoRa firmware and apps against live MeshCore deployments. Where DongLoRa
 behavior diverges from upstream, this spec follows upstream and treats the
 DongLoRa side as a follow-up bug, not a spec change.
 
-Conformance against the [test corpus](https://github.com/swaits/meshcore-spec/tree/main/corpus)
+Conformance against the [test corpus](https://github.com/swaits/meshcore-spec/tree/v0.1.0/corpus)
 is a useful signal but **not a substitute** for cross-checking against
 upstream firmware. If you find a divergence from upstream, please
 [file an issue](https://github.com/swaits/meshcore-spec/issues) — that is

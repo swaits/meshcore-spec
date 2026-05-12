@@ -59,7 +59,7 @@ function calculatePacketHash(packet):
 ### Cross-References
 
 - [Section 10: Trace](10-payload-trace.md) — TRACE packet special handling
-- Test vectors: `corpus/crypto/sha256/packet-hash.json`
+- Test vectors: [`corpus/crypto/sha256/packet-hash.json`](https://github.com/swaits/meshcore-spec/blob/main/corpus/crypto/sha256/packet-hash.json)
 
 ### Reference Implementation
 

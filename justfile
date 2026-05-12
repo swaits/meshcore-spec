@@ -74,8 +74,16 @@ cut-version VERSION:
         echo "snapshot still says 'latest (main)'. Check that src/00-overview.md" >&2
         echo "contains the marker line ('**Spec version:** \`latest (main)\`')." >&2
     fi
+    # Repoint corpus links to this version's GitHub tree. The spec keeps
+    # CHANGELOG links pointing at main (more useful — full history) by
+    # only matching .../tree/main/corpus and .../blob/main/corpus.
+    find "versions/{{VERSION}}" -name '*.md' -exec sed -i \
+        -e 's|/tree/main/corpus|/tree/{{VERSION}}/corpus|g' \
+        -e 's|/blob/main/corpus|/blob/{{VERSION}}/corpus|g' \
+        {} +
     echo "Snapshotted src/ -> versions/{{VERSION}}"
     echo
     echo "Next steps:"
     echo "  - git add versions/{{VERSION}} && commit (e.g. \"release {{VERSION}}\")"
-    echo "  - optionally tag the commit: git tag {{VERSION}}"
+    echo "  - git tag {{VERSION}}  # REQUIRED so the corpus links in /{{VERSION}}/"
+    echo "                        # resolve on GitHub (they point at tree/{{VERSION}}/...)"
