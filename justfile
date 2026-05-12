@@ -1,9 +1,16 @@
 # meshcore-spec — task runner.
 #
-# Every recipe runs under `mise exec sh -c …`, so mise-pinned tools
+# Every recipe runs under `mise exec -- sh -c …`, so mise-pinned tools
 # (see mise.toml) are on PATH and we never accidentally use a system
 # mdbook of the wrong version. `sh` is intentional — keep recipes
 # POSIX-compatible.
+#
+# Background on `preview` vs the other build recipes:
+# `mdbook build` (used by `build` and `serve`) produces a single-
+# version site with no versions.json, so the version-picker stays in
+# its label-only fallback there. To see the picker as a dropdown
+# locally, run `just preview` — it builds the full multi-version site
+# AND serves it over HTTP, since browsers block fetch() under file://.
 
 set shell := ["mise", "exec", "--", "sh", "-c"]
 
@@ -15,20 +22,29 @@ _default:
 setup:
     mise install
 
-# Build the spec into ./book/ (single-version; for local dev).
+# Build a single-version site into ./book/ (mdbook output dir).
 build:
     mdbook build
 
-# Build the full multi-version site into ./_site/ (latest + every v* tag).
-# This is exactly what CI runs.
+# Build the full multi-version site into ./_site/ (same logic CI runs).
 build-site:
     sh scripts/build-site.sh
 
-# Live-preview the spec at http://localhost:3000 with auto-reload.
+# Build the multi-version site and serve it at http://localhost:8000/.
+preview: build-site
+    @echo ""
+    @echo "Serving ./_site/ at http://localhost:8000/"
+    @echo "  http://localhost:8000/latest/   - rolling main"
+    @echo "  http://localhost:8000/v0.1.0/   - frozen v0.1.0"
+    @echo "  Ctrl-C to stop."
+    @echo ""
+    cd _site && python3 -m http.server 8000
+
+# Live-preview a single-version build at http://localhost:3000 (auto-reload).
 serve:
     mdbook serve --open --port 3000
 
-# Remove all build outputs (single-version and multi-version).
+# Remove all build outputs (single- and multi-version).
 clean:
     rm -rf book _site
 
@@ -36,8 +52,7 @@ clean:
 validate:
     python3 tools/validate.py corpus/
 
-# Cut a frozen spec version: copy ./src/ to ./versions/<VERSION>/.
-# Usage: just cut-version v0.2.0
+# Snapshot ./src/ as ./versions/VERSION/. Usage: just cut-version v0.2.0
 cut-version VERSION:
     #!/usr/bin/env sh
     set -eu
