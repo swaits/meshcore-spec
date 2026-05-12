@@ -30,6 +30,7 @@ mkdir -p "$SITE_DIR"
 
 # ---- latest (from src/) ----
 group "build latest"
+MDBOOK_BOOK__TITLE="MeshCore Protocol Specification — latest (main)" \
 MDBOOK_OUTPUT__HTML__SITE_URL="${SITE_BASE}/latest/" \
     mdbook build "$WORKSPACE" -d "$SITE_DIR/latest"
 endgroup
@@ -51,6 +52,7 @@ for version in $VERSION_DIRS; do
     [ -d "$vdir" ] || continue
     group "build $version"
     if ! MDBOOK_BOOK__SRC="$vdir" \
+         MDBOOK_BOOK__TITLE="MeshCore Protocol Specification — ${version}" \
          MDBOOK_OUTPUT__HTML__SITE_URL="${SITE_BASE}/${version}/" \
          mdbook build "$WORKSPACE" -d "$SITE_DIR/${version}"; then
         warn "mdbook build failed for ${version}; skipping"

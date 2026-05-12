@@ -2,6 +2,9 @@
 
 ## Section 0: Overview
 
+**Spec version:** `v0.1.0` &middot; see
+[Spec Versions](#spec-versions) for the full list of frozen releases.
+
 ### Status and Provenance
 
 > **This is an unofficial, independent specification.** It is **not** part of

@@ -2,6 +2,9 @@
 
 ## Section 0: Overview
 
+**Spec version:** `latest (main)` &middot; see
+[Spec Versions](#spec-versions) for the full list of frozen releases.
+
 ### Status and Provenance
 
 > **This is an unofficial, independent specification.** It is **not** part of

@@ -51,6 +51,14 @@ cut-version VERSION:
     fi
     mkdir -p versions
     cp -R src "versions/{{VERSION}}"
+    # Freeze the version marker in the snapshot. src/ keeps the literal
+    # `latest (main)` so the rolling /latest/ build stays accurate.
+    sed -i 's|`latest (main)`|`{{VERSION}}`|' "versions/{{VERSION}}/00-overview.md"
+    if ! grep -q '`{{VERSION}}`' "versions/{{VERSION}}/00-overview.md"; then
+        echo "warning: expected version marker not found in 00-overview.md; the" >&2
+        echo "snapshot still says 'latest (main)'. Check that src/00-overview.md" >&2
+        echo "contains the marker line ('**Spec version:** \`latest (main)\`')." >&2
+    fi
     echo "Snapshotted src/ -> versions/{{VERSION}}"
     echo
     echo "Next steps:"
