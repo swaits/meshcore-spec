@@ -15,9 +15,14 @@ _default:
 setup:
     mise install
 
-# Build the spec into ./book/.
+# Build the spec into ./book/ (single-version; for local dev).
 build:
     mdbook build
+
+# Build the full multi-version site into ./_site/ (latest + every v* tag).
+# This is exactly what CI runs.
+build-site:
+    sh scripts/build-site.sh
 
 # Live-preview the spec at http://localhost:3000 with auto-reload.
 serve:
