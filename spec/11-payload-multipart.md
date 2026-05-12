@@ -57,7 +57,13 @@ The only currently defined multipart sub-type is ACK (sub_type = 0x03):
 Total payload: 5 bytes (1 byte header + 4 byte CRC).
 
 Multipart ACKs are used to send additional ACK retransmissions for reliability.
-The `remaining` field indicates how many more ACK packets follow this one.
+The `remaining` field indicates how many more ACK packets follow this one,
+counting down: a chain of K extra copies is emitted as MULTIPART with
+`remaining = K, K-1, …, 1`, followed by exactly one final plain
+`PAYLOAD_TYPE_ACK` packet (NOT a MULTIPART with `remaining = 0`). All copies
+in the chain carry the same `ack_crc`. Receivers MUST treat the first copy
+received as the authoritative ACK and dedup subsequent copies by `ack_crc`
+at the application layer.
 
 ### Multipart ACK Usage Constraints
 
