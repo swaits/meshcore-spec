@@ -1,5 +1,24 @@
 # Changelog
 
+This project follows a loose [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
+convention. Released versions live as frozen snapshots under `versions/vX.Y.Z/`
+in the repo; the rolling tip of `main` is what `latest` deploys.
+
+## [Unreleased]
+
+_(nothing yet)_
+
+## [v0.1.0] — 2026-05-12
+
+First cut release of the spec. Snapshotted as `versions/v0.1.0/`, deployed
+at <https://swaits.github.io/meshcore-spec/v0.1.0/>.
+
+The dated entries below describe the substantive passes whose output is
+captured in this release. Future releases will follow the standard
+Added / Changed / Fixed / Removed grouping under their version heading.
+
+---
+
 ## 2026-05-12 — Publication-Readiness Pass
 
 **Upstream baseline:** Validated against
