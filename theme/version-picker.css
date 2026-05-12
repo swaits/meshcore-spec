@@ -1,0 +1,43 @@
+.version-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0 0.4em;
+  font-size: 0.85em;
+  line-height: 1;
+}
+
+.version-picker-label {
+  color: var(--icons);
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+}
+
+.version-picker-select {
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--icons);
+  border-radius: 3px;
+  padding: 0.2em 0.45em;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1.2;
+}
+
+.version-picker-select:hover,
+.version-picker-select:focus {
+  border-color: var(--fg);
+  outline: none;
+}
+
+.version-picker-floating {
+  position: fixed;
+  top: 0.5em;
+  right: 0.5em;
+  z-index: 1000;
+  background: var(--bg);
+  padding: 0.4em 0.6em;
+  border: 1px solid var(--icons);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}

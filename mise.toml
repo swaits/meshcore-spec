@@ -1,0 +1,8 @@
+# Tool versions for meshcore-spec.
+#
+# Pins are used by CI (.github/workflows/mdbook.yml) and by the justfile,
+# which runs every recipe under `mise exec sh -c …`. Bump intentionally;
+# don't drift.
+
+[tools]
+"cargo:mdbook" = "0.5.2"

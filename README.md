@@ -4,6 +4,8 @@ A comprehensive specification and conformance test suite for the
 [MeshCore](https://github.com/meshcore-dev/MeshCore) mesh networking protocol.
 
 **📖 Read the spec online:** <https://swaits.github.io/meshcore-spec/>
+(rolling `latest` build, plus a frozen snapshot per `vX.Y.Z` tag — pick one
+from the version-picker in the top-right of any page)
 
 MeshCore Spec aims to be the authoritative, machine-readable definition of the
 MeshCore wire format — much like [RubySpec](https://github.com/ruby/spec) became

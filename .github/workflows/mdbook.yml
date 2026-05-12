@@ -3,6 +3,7 @@ name: mdBook
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -16,26 +17,102 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+env:
+  # Repo path on GitHub Pages — change here if the repo is renamed.
+  SITE_BASE: /meshcore-spec
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install mdBook
-        uses: peaceiris/actions-mdbook@v2
+      - name: Checkout (with tags)
+        uses: actions/checkout@v4
         with:
-          mdbook-version: latest
+          fetch-depth: 0
+
+      - name: Install mise + pinned tools (mdbook, etc.)
+        uses: jdx/mise-action@v2
+        with:
+          install: true
+          cache: true
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Build book
-        run: mdbook build
+
+      - name: Build all versions
+        run: |
+          set -euo pipefail
+
+          mkdir -p _site
+          WORKSPACE="$PWD"
+
+          # ---- latest (current ref) ----
+          echo "::group::build latest"
+          MDBOOK_OUTPUT__HTML__SITE_URL="${SITE_BASE}/latest/" \
+            mdbook build "$WORKSPACE" -d "$WORKSPACE/_site/latest"
+          echo "::endgroup::"
+
+          # ---- each v* tag ----
+          # Tags are built in worktrees so the workflow's own files (this
+          # file, the picker JS/CSS) don't bleed into older builds.
+          mapfile -t TAGS < <(git tag --list 'v*' --sort=-v:refname)
+          for tag in "${TAGS[@]:-}"; do
+            [ -z "$tag" ] && continue
+            echo "::group::build $tag"
+            wt="$(mktemp -d -t "mdbook-${tag//\//-}-XXXXXX")"
+            git worktree add --detach "$wt" "$tag"
+            # If a very old tag lacks book.toml, skip it but don't fail.
+            if [ -f "$wt/book.toml" ]; then
+              MDBOOK_OUTPUT__HTML__SITE_URL="${SITE_BASE}/${tag}/" \
+                mdbook build "$wt" -d "$WORKSPACE/_site/${tag}" || {
+                  echo "::warning::mdbook build failed for ${tag}; skipping"
+                  rm -rf "$WORKSPACE/_site/${tag}"
+                }
+            else
+              echo "::warning::${tag} has no book.toml; skipping"
+            fi
+            git worktree remove --force "$wt"
+            echo "::endgroup::"
+          done
+
+          # ---- versions.json (consumed by theme/version-picker.js) ----
+          # Newest first; "latest" always at the top.
+          {
+            printf '['
+            printf '"latest"'
+            for tag in "${TAGS[@]:-}"; do
+              [ -z "$tag" ] && continue
+              [ -d "_site/${tag}" ] || continue
+              printf ',"%s"' "$tag"
+            done
+            printf ']\n'
+          } > _site/versions.json
+          echo "versions.json:"
+          cat _site/versions.json
+
+          # ---- root redirect to /latest/ ----
+          cat > _site/index.html <<'HTML'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta http-equiv="refresh" content="0; url=./latest/">
+            <link rel="canonical" href="./latest/">
+            <title>MeshCore Protocol Specification</title>
+          </head>
+          <body>
+            <p>Redirecting to the <a href="./latest/">latest version</a>&hellip;</p>
+          </body>
+          </html>
+          HTML
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./book
+          path: ./_site
 
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     needs: build
     runs-on: ubuntu-latest
     environment:

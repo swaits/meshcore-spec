@@ -10,7 +10,11 @@ default-theme = "navy"
 preferred-dark-theme = "navy"
 git-repository-url = "https://github.com/swaits/meshcore-spec"
 edit-url-template = "https://github.com/swaits/meshcore-spec/edit/main/{path}"
-site-url = "/meshcore-spec/"
+# CI overrides per-version with MDBOOK_OUTPUT__HTML__SITE_URL.
+# Default below targets the "latest" deploy from main.
+site-url = "/meshcore-spec/latest/"
+additional-js = ["theme/version-picker.js"]
+additional-css = ["theme/version-picker.css"]
 
 [output.html.fold]
 enable = true

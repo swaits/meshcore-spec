@@ -34,6 +34,24 @@ upstream firmware. If you find a divergence from upstream, please
 [file an issue](https://github.com/swaits/meshcore-spec/issues) — that is
 exactly the kind of report this project exists to catch.
 
+### Spec Versions
+
+The published site preserves prior spec versions alongside the rolling
+`latest` build. The URL layout is:
+
+- `https://swaits.github.io/meshcore-spec/latest/` — built from the tip of
+  `main`. May change between any two visits.
+- `https://swaits.github.io/meshcore-spec/v0.1.0/` (and likewise for any
+  future `vX.Y.Z`) — a frozen snapshot built from the matching git tag.
+  Suitable for citing or for certifying an implementation against.
+
+The version-picker in the top-right of every page lists every published
+version; switching keeps you on the same chapter where it exists in the
+target version. Spec versions use semver and are **independent** of the
+upstream MeshCore firmware's own versioning — each release records the
+upstream commit hash it was validated against in
+[CHANGELOG.md](https://github.com/swaits/meshcore-spec/blob/main/CHANGELOG.md).
+
 ### Scope
 
 This specification covers:
