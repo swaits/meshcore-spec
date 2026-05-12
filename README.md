@@ -8,6 +8,34 @@ MeshCore wire format — much like [RubySpec](https://github.com/ruby/spec) beca
 the definitive specification of the Ruby language. Any implementation that passes
 the full test corpus can claim bit-perfect MeshCore compatibility.
 
+## Provenance
+
+This is an **independent, AI-authored project**. It is not affiliated with,
+endorsed by, or maintained by the upstream MeshCore project. Read this section
+before relying on the spec for anything load-bearing.
+
+- **Authorship.** The spec, the corpus, and the tooling were written by Claude
+  (Anthropic, primarily Opus 4.x) under the direction of Stephen Waits.
+  Substantive edits — additions, clarifications, audit passes — are produced
+  through model-driven analysis of the official MeshCore source and reviewed
+  before commit.
+- **Source of truth.** The official MeshCore firmware at
+  [meshcore-dev/MeshCore](https://github.com/meshcore-dev/MeshCore) is the
+  **golden source of truth** for all protocol behavior. Whenever this spec and
+  the upstream C++ disagree, **upstream wins** — this spec is downstream and
+  the canonical text is the C++. Each substantive change in `CHANGELOG.md`
+  records the upstream commit hash it was validated against.
+- **Refined through DongLoRa.** Clarifications and edge-case detail in this
+  spec have been driven in part by observations from building DongLoRa
+  firmware and apps against live MeshCore deployments. Where DongLoRa
+  behavior diverges from upstream, this spec follows upstream and treats the
+  DongLoRa side as a follow-up bug, not a spec change.
+- **Use it carefully.** Conformance against this corpus is a useful signal
+  but not a substitute for cross-checking against upstream firmware for any
+  behavior that affects interoperability. If you find a divergence from
+  upstream, please file an issue — that is exactly the kind of report this
+  project exists to catch.
+
 ## What's Here
 
 - **`spec/`** — RFC-style protocol specification in Markdown, covering every
@@ -45,9 +73,8 @@ implementation.
 
 ## Project Status
 
-This project is under active development. The specification and corpus are being
-built from the [official MeshCore firmware](https://github.com/meshcore-dev/MeshCore)
-source code.
+This project is under active development. See [Provenance](#provenance) above
+for how the spec is produced and what to verify against.
 
 ## Protocol Versions
 
@@ -65,6 +92,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Acknowledgments
 
-Based on the [MeshCore firmware](https://github.com/meshcore-dev/MeshCore) by
-the MeshCore developers. Protocol documentation derived from the official
-[MeshCore docs](https://docs.meshcore.io).
+This spec would not exist without the [MeshCore firmware](https://github.com/meshcore-dev/MeshCore)
+by the MeshCore developers and the official [MeshCore docs](https://docs.meshcore.io),
+which together are the authoritative reference this spec derives from.
+
+## Author
+
+Stephen Waits <steve@waits.net>
