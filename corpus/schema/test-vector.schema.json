@@ -329,17 +329,25 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "sender_seed": {
+          "$ref": "#/$defs/hex_string",
+          "description": "32-byte Ed25519 seed of sender; SHA-512-expanded and clamped to form the 64-byte private key"
+        },
         "sender_private_key": {
           "$ref": "#/$defs/hex_string",
-          "description": "64-byte Ed25519 private key of sender"
+          "description": "64-byte expanded Ed25519 private key of sender (clamped scalar a || nonce prefix RH)"
         },
         "sender_public_key": {
           "$ref": "#/$defs/hex_string",
           "description": "32-byte Ed25519 public key of sender"
         },
+        "recipient_seed": {
+          "$ref": "#/$defs/hex_string",
+          "description": "32-byte Ed25519 seed of recipient; SHA-512-expanded and clamped to form the 64-byte private key"
+        },
         "recipient_private_key": {
           "$ref": "#/$defs/hex_string",
-          "description": "64-byte Ed25519 private key of recipient"
+          "description": "64-byte expanded Ed25519 private key of recipient (clamped scalar a || nonce prefix RH)"
         },
         "recipient_public_key": {
           "$ref": "#/$defs/hex_string",

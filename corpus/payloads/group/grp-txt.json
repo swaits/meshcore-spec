@@ -3,7 +3,7 @@
   "name": "Group Text Payload",
   "spec_ref": "src/08-payload-group.md",
   "protocol_version": 0,
-  "description": "Tests group text message payload: channel_hash(1) + cipher_mac(2) + ciphertext.",
+  "description": "Tests group text message payload: channel_hash(1) + cipher_mac(2) + ciphertext. The encrypted plaintext is the GRP_TXT inner format: timestamp(4, LE) + flags(1) + \"<sender_name>: <body>\".",
   "vectors": [
     {
       "id": "grp-txt-001",
@@ -22,23 +22,23 @@
         },
         "payload": {
           "channel_hash": "72",
-          "cipher_mac": "D184",
-          "ciphertext": "948C819389BA4ED7B1194A0FF8E62073"
+          "cipher_mac": "EC1C",
+          "ciphertext": "AE220A559CFF467B8F45948C2CABFD745BB36B14426A2127BB391DBBA51DE9E5"
         }
       },
-      "binary": "15 00 72 D184 948C819389BA4ED7B1194A0FF8E62073",
+      "binary": "15 00 72 EC1C AE220A559CFF467B8F45948C2CABFD745BB36B14426A2127BB391DBBA51DE9E5",
       "crypto_context": {
         "shared_secret": "202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F",
         "encryption_key": "202122232425262728292A2B2C2D2E2F",
-        "plaintext": "47726F75704D736721"
+        "plaintext": "00F1536500616C6963653A2068656C6C6F206D657368"
       },
-      "notes": "Channel hash = SHA256(channel_secret)[0] = 0x72. Plaintext 'GroupMsg!' (9 bytes). AES key = first 16 bytes of channel secret."
+      "notes": "Channel hash = SHA256(channel_secret)[0] = 0x72. Inner plaintext is the GRP_TXT format: timestamp 1700000000 (00F15365 LE) + flags 0x00 (TXT_TYPE_PLAIN) + the message \"alice: hello mesh\" (sender name \"alice\"). 22 bytes, AES-128-ECB zero-padded to 32. AES key = first 16 bytes of channel secret; MAC = HMAC-SHA256(channel_secret, ciphertext)[0..1]."
     },
     {
       "id": "grp-txt-002",
       "description": "Group text with tampered MAC must fail",
       "type": "invalid",
-      "binary": "15 00 72 0000 948C819389BA4ED7B1194A0FF8E62073",
+      "binary": "15 00 72 0000 AE220A559CFF467B8F45948C2CABFD745BB36B14426A2127BB391DBBA51DE9E5",
       "expected_error": "mac_invalid",
       "notes": "Same ciphertext as grp-txt-001 but MAC zeroed. Verification must fail."
     }

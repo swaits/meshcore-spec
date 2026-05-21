@@ -216,8 +216,9 @@ def validate_vector_consistency(vector, file_path):
     if "crypto_context" in vector:
         ctx = vector["crypto_context"]
         for field in ("shared_secret", "encryption_key", "plaintext",
-                      "sender_private_key", "sender_public_key",
-                      "recipient_private_key", "recipient_public_key"):
+                      "sender_seed", "sender_private_key", "sender_public_key",
+                      "recipient_seed", "recipient_private_key",
+                      "recipient_public_key"):
             if field in ctx:
                 errors.extend(validate_hex_string(
                     ctx[field], f"crypto_context.{field}", file_path, vid))

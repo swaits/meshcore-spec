@@ -69,6 +69,59 @@ secret. Only a successful MAC verification confirms the correct channel.
    channel's shared key.
 4. The first channel that produces a valid MAC yields the correct decryption.
 
+### Inner Plaintext Format
+
+The decrypted ciphertext begins with a 4-byte little-endian `timestamp`. The
+remaining bytes depend on the payload type.
+
+**GRP_TXT** uses the same `timestamp ‖ flags` prefix as TXT_MSG (see
+[Section 6 — Plaintext Format (TXT_MSG)](06-payload-encrypted.md#plaintext-format-txt_msg)):
+
+| Field | Offset | Size | Type | Description |
+|-------|--------|------|------|-------------|
+| timestamp | 0 | 4 bytes | uint32_le | Message timestamp |
+| flags | 4 | 1 byte | uint8 | Bits 2–7: message type (`0` = plain text); bits 0–1: attempt counter |
+| message | 5 | remaining | UTF-8 | `"<sender_name>: <body>"` |
+
+For GRP_TXT the reference chat firmware always sets `flags` to `0x00`
+(`TXT_TYPE_PLAIN`, attempt 0). The `message` joins the sender's display name
+and the body as `"<sender_name>: <body>"` (for example, `alice: on my way`), so
+every channel member can attribute the message without a separate sender field.
+The receiver requires the plaintext to be longer than 5 bytes and reads
+`message` as a NUL-terminated string: trailing zero bytes from AES-ECB padding
+(see [Section 14](14-crypto.md)) act as the terminator, and a receiver MUST
+treat the first `0x00` byte at or after offset 5 as the end of the message.
+
+**GRP_DATA** carries `timestamp(4)` followed by an application-defined binary
+blob. MeshCore prescribes no structure for the blob.
+
+### Length Limits
+
+The ciphertext is AES-128-ECB output, so it is always a positive multiple of
+`CIPHER_BLOCK_SIZE` (16 bytes). With a 1-byte `channel_hash` and 2-byte
+`cipher_mac`, the encoder (`Mesh::createGroupDatagram`) rejects any plaintext
+longer than 168 bytes (`data_len + 1 + CIPHER_BLOCK_SIZE − 1 ≤
+MAX_PACKET_PAYLOAD`).
+
+For GRP_TXT the reference chat firmware applies a tighter limit: `MAX_TEXT_LEN`
+= `10 × CIPHER_BLOCK_SIZE` = **160 bytes** (`BaseChatMesh.h`). This bound is
+applied to the combined `"<sender_name>: " + body` text; the 4-byte `timestamp`
+and 1-byte `flags` are additional.
+
+Because the sender's display name is embedded in the plaintext, the body length
+available to an application is **not fixed** — it shrinks as the sender name
+grows. For sender names of 0–32 characters the usable body runs roughly from
+153 bytes (short name) down to 121 bytes (32-character name). Implementations
+MUST handle this variability and MUST NOT assume a single fixed maximum body
+length.
+
+> **Note (informational).** Upstream issue
+> [#2583](https://github.com/meshcore-dev/MeshCore/issues/2583) proposes raising
+> the GRP_TXT limit to 11 blocks (~172 bytes), since a 1-byte `channel_hash`,
+> 2-byte `cipher_mac`, and an 11-block ciphertext still fit within
+> `MAX_PACKET_PAYLOAD`. That change is not present in the reference firmware
+> this specification tracks.
+
 ### Cross-References
 
 - [Section 14: Cryptography](14-crypto.md) — Encrypt-then-MAC

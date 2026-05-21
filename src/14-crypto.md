@@ -15,9 +15,12 @@ in an encrypt-then-MAC scheme.
 |-----------|-----------|----------|--------|
 | Symmetric Encryption | AES-128-ECB | 16 bytes | Multiple of 16 bytes |
 | Message Authentication | HMAC-SHA256 | 32 bytes | 2 bytes (truncated) |
-| Digital Signature | Ed25519 | 32/64 bytes | 64 bytes |
+| Digital Signature | Ed25519 | 32 B public / 64 B private | 64 bytes |
 | Key Exchange | X25519 (ECDH) | 32 bytes | 32 bytes |
 | Hashing | SHA-256 | — | Up to 32 bytes |
+
+Ed25519 private keys are stored in expanded `a ‖ RH` form rather than as a
+32-byte seed; see [Section 15: Private Key Format](15-identity.md#private-key-format).
 
 ### AES-128-ECB Encryption
 

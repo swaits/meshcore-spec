@@ -3,7 +3,7 @@
   "name": "Group Data Payload",
   "spec_ref": "src/08-payload-group.md",
   "protocol_version": 0,
-  "description": "Tests group datagram payload. Same wire format as GRP_TXT but payload type = 0x06.",
+  "description": "Tests group datagram payload. Same wire format as GRP_TXT but payload type = 0x06. The encrypted plaintext is timestamp(4, LE) followed by an application-defined binary blob.",
   "vectors": [
     {
       "id": "grp-data-001",
@@ -22,17 +22,17 @@
         },
         "payload": {
           "channel_hash": "72",
-          "cipher_mac": "D184",
-          "ciphertext": "948C819389BA4ED7B1194A0FF8E62073"
+          "cipher_mac": "EFFF",
+          "ciphertext": "70917BC984A0AD4A409C3906B2266144"
         }
       },
-      "binary": "19 00 72 D184 948C819389BA4ED7B1194A0FF8E62073",
+      "binary": "19 00 72 EFFF 70917BC984A0AD4A409C3906B2266144",
       "crypto_context": {
         "shared_secret": "202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F",
         "encryption_key": "202122232425262728292A2B2C2D2E2F",
-        "plaintext": "47726F75704D736721"
+        "plaintext": "00F15365DEADBEEF0102030405"
       },
-      "notes": "Header 0x19 = GRP_DATA(6)+FLOOD(1). Same ciphertext as GRP_TXT since same key and plaintext."
+      "notes": "Header 0x19 = GRP_DATA(6)+FLOOD(1). Channel hash = SHA256(channel_secret)[0] = 0x72. Inner plaintext is the GRP_DATA format: timestamp 1700000000 (00F15365 LE) + the application-defined blob DEADBEEF0102030405. 13 bytes, AES-128-ECB zero-padded to 16. AES key = first 16 bytes of channel secret; MAC = HMAC-SHA256(channel_secret, ciphertext)[0..1]."
     }
   ]
 }
